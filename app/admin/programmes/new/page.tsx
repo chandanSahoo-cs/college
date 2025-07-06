@@ -18,16 +18,8 @@ const formSchema = z.object({
   Prog_Short_Name: z.string().min(1, "Program short name is required"),
   University_School: z.string().min(1, "University/School is required"),
   Semester_Annual: z.enum(["0", "1"]),
-  Min_Duration_in_years: z
-    .string()
-    .min(1, "Minimum duration is required")
-    .transform((val) => Number.parseInt(val))
-    .refine((val) => val > 0 && val <= 99, "Duration must be between 1 and 99 years"),
-  Max_Duration_in_years: z
-    .string()
-    .min(1, "Maximum duration is required")
-    .transform((val) => Number.parseInt(val))
-    .refine((val) => val > 0 && val <= 99, "Duration must be between 1 and 99 years"),
+  Min_Duration_in_years: z.number().min(1, "Minimum duration is required").max(99, "Duration must be between 1 and 99 years"),
+  Max_Duration_in_years: z.number().min(1, "Maximum duration is required").max(99, "Duration must be between 1 and 99 years"),
   Regulatory_Body_Name: z.string().optional(),
   Regulatory_Body_ShortName: z.string().optional(),
 })
@@ -47,8 +39,8 @@ export default function NewProgrammePage() {
       Regulatory_Body_ShortName: "",
       University_School: "",
       Semester_Annual: undefined,
-      Min_Duration_in_years: "",
-      Max_Duration_in_years: "",
+      Min_Duration_in_years: 0,
+      Max_Duration_in_years: 0,
     },
   })
 
@@ -109,7 +101,7 @@ export default function NewProgrammePage() {
                         <FormControl>
                           <Input placeholder="e.g., BTECH001" {...field} />
                         </FormControl>
-                        <FormDescription>Unique identifier for the programme (max 10 characters)</FormDescription>
+                       
                         <FormMessage />
                       </FormItem>
                     )}
@@ -124,7 +116,7 @@ export default function NewProgrammePage() {
                         <FormControl>
                           <Input placeholder="e.g., B.Tech" {...field} />
                         </FormControl>
-                        <FormDescription>Abbreviated programme name (max 20 characters)</FormDescription>
+                        
                         <FormMessage />
                       </FormItem>
                     )}
@@ -140,7 +132,7 @@ export default function NewProgrammePage() {
                       <FormControl>
                         <Input placeholder="e.g., Bachelor of Technology" {...field} />
                       </FormControl>
-                      <FormDescription>Full name of the programme (max 50 characters)</FormDescription>
+                      
                       <FormMessage />
                     </FormItem>
                   )}
