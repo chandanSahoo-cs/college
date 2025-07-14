@@ -39,13 +39,7 @@ import { useParams } from "next/navigation"
     }, [id])
 
 
-    const handleUpdateProgramme = async () => {
-      try {
-        //TODO do a db call to update Programme
-      } catch (error) {
-        console.error("Error updating programme:", error)
-      }
-    }
+  
    
     const handleFetcProgrammes = async () => {
       try {

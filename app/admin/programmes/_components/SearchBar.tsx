@@ -14,30 +14,53 @@ interface SearchBarProps {
 
 export default function SearchBar({ programmes }: SearchBarProps) {
   const [searchTerm, setSearchTerm] = useState("")
+  const [filter, setFilter] = useState("all")
 
-  const filteredProgrammes = programmes.filter(
-    (programme) =>
-      programme.Prog_Name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      programme.Prog_Short_Name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      programme.Prog_ID.toLowerCase().includes(searchTerm.toLowerCase()),
-  )
+
+
+  const filteredProgrammesByAttribute = (programmes: any[], filter: "all" | "Programmes" | "Duration" | "Name" | "Short Name" | "University" | "Semester/Annual" | "Min_Duration_in_years" | "Max_Duration_in_years") => {
+    switch (filter) {
+      case "all":
+        return programmes
+      case "Programmes":
+        return programmes.filter((programme) => programme.Prog_Name.toLowerCase().includes(searchTerm.toLowerCase()))
+      case "Duration":
+        return programmes.filter((programme) => programme.Min_Duration_in_years === Number(searchTerm))
+      case "Name":
+        return programmes.filter((programme) => programme.Prog_Name.toLowerCase().includes(searchTerm.toLowerCase()))
+      case "Short Name":
+        return programmes.filter((programme) => programme.Prog_Short_Name.toLowerCase().includes(searchTerm.toLowerCase()))
+      case "University":
+        return programmes.filter((programme) => programme.University_School.toLowerCase().includes(searchTerm.toLowerCase()))
+      case "Semester/Annual":
+        return programmes.filter((programme) => programme.Semester_Annual === Number(searchTerm))
+      case "Min_Duration_in_years":
+        return programmes.filter((programme) => programme.Min_Duration_in_years === Number(searchTerm))
+      case "Max_Duration_in_years":
+        return programmes.filter((programme) => programme.Max_Duration_in_years === Number(searchTerm))
+      default:
+        return programmes
+    }
+  }
 
   return (
     <div className="flex flex-col gap-4">
       <div className="flex gap-2">
         <Input
-          placeholder="Search programmes..."
+          placeholder= {`Search programmes ${filter}`}
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
-        <Select defaultValue="all">
+        <Select defaultValue="all" onValueChange={(value) => setFilter(value)}>
           <SelectTrigger>
             <SelectValue placeholder="Filter by duration" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All</SelectItem>
-            <SelectItem value="4">4 Years</SelectItem>
-            <SelectItem value="5">5 Years</SelectItem>
+            <SelectItem value="Programmes">Programmes</SelectItem>
+            <SelectItem value="Duration">Duration</SelectItem>
+            <SelectItem value="Name">Name</SelectItem>
+            <SelectItem value="Short Name">Short Name</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -56,7 +79,7 @@ export default function SearchBar({ programmes }: SearchBarProps) {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {filteredProgrammes.map((programme) => (
+            {filteredProgrammesByAttribute(programmes, filter).map((programme) => (
               <TableRow key={programme.Prog_ID}>
                 <TableCell>{programme.Prog_ID}</TableCell>
                 <TableCell>{programme.Prog_Name}</TableCell>

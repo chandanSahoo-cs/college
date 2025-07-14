@@ -26,7 +26,7 @@ const formatProgrammeData = (programme: any) => ({
 export default async function ProgrammesPage() {
   try {
     const programmes = await getAllProgrammes()
-    const formattedProgrammes = programmes.map(formatProgrammeData)
+    const formattedProgrammes = programmes?.map(formatProgrammeData)
 
     if (!formattedProgrammes || formattedProgrammes.length === 0) {
       redirect('/admin/programmes/new')
