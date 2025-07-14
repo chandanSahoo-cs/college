@@ -11,14 +11,14 @@ import { deleteProgrammeById } from "@/action/programmes.action"
 interface SearchBarProps {
   programmes: any[]
 }
-
+type FilterOption = "all" | "Programmes" | "Duration" | "Name" | "Short Name" | "University" | "Semester/Annual" | "Min_Duration_in_years" | "Max_Duration_in_years"
 export default function SearchBar({ programmes }: SearchBarProps) {
   const [searchTerm, setSearchTerm] = useState("")
-  const [filter, setFilter] = useState("all")
+  const [filter, setFilter] = useState<FilterOption>("all")
 
 
 
-  const filteredProgrammesByAttribute = (programmes: any[], filter: "all" | "Programmes" | "Duration" | "Name" | "Short Name" | "University" | "Semester/Annual" | "Min_Duration_in_years" | "Max_Duration_in_years") => {
+  const filteredProgrammesByAttribute = (programmes: any[], filter: FilterOption) => {
     switch (filter) {
       case "all":
         return programmes
