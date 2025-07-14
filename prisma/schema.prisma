@@ -1,0 +1,237 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model programmes {
+  prog_id                   String  @id @db.VarChar(10)
+  prog_name                 String  @db.VarChar(50)
+  prog_short_name           String  @db.VarChar(20)
+  regulatory_body_name      String? @db.VarChar(50)
+  regulatory_body_shortname String? @db.VarChar(10)
+  university_school         String  @db.VarChar(10)
+  semester_annual           Int     @db.SmallInt
+  min_duration_in_years     Int     @db.SmallInt
+  max_duration_in_years     Int     @db.SmallInt
+
+  courses courses[] @relation("ProgrammeCourses")
+}
+
+model courses {
+  course_id             String @id @db.Char(3)
+  course_name           String @db.VarChar(100)
+  course_short_name     String @db.VarChar(20)
+  prog_id               String @db.VarChar(10)
+  semester_annual       Int    @db.SmallInt
+  min_duration_in_years Int    @db.SmallInt
+  max_duration_in_years Int    @db.SmallInt
+  total_semester_annual Int    @db.SmallInt
+
+  programme     programmes      @relation("ProgrammeCourses", fields: [prog_id], references: [prog_id])
+  courseintakes course_intake[] @relation("CourseIntake")
+  courseschemes course_scheme[] @relation("CourseSchemes")
+  students      students[] // reverse relation
+}
+
+model course_intake {
+  course_id String @db.Char(3)
+  acad_year Int
+  intake    Int    @db.SmallInt
+
+  course courses @relation("CourseIntake", fields: [course_id], references: [course_id])
+
+  @@id([course_id, acad_year])
+}
+
+model course_scheme {
+  scheme_id                 String  @id @db.VarChar(12)
+  course_id                 String  @db.Char(3)
+  acad_year                 Int
+  semester_annual           Int     @db.SmallInt
+  min_duration_in_years     Int     @db.SmallInt
+  max_duration_in_years     Int     @db.SmallInt
+  total_semester_annual     Int     @db.SmallInt
+  min_credits               Int     @db.SmallInt
+  max_credits               Int     @db.SmallInt
+  regulatory_body_name      String? @db.VarChar(50)
+  regulatory_body_shortname String? @db.VarChar(10)
+  university_school         String  @db.VarChar(10)
+
+  course         courses          @relation("CourseSchemes", fields: [course_id], references: [course_id])
+  subjectmasters subject_master[] @relation("SchemeSubjects")
+}
+
+model subject_master {
+  paper_id        String  @db.VarChar(6)
+  scheme_id       String  @db.VarChar(12)
+  paper_code      String  @db.VarChar(10)
+  paper_name      String  @db.VarChar(100)
+  credits         Int     @db.SmallInt
+  type            Int     @db.SmallInt
+  exam            Int     @db.SmallInt
+  mode            Int     @db.SmallInt
+  paper_group     String? @db.VarChar(5)
+  paper_sub_group String? @db.VarChar(5)
+  kind            Int     @db.SmallInt
+  minor_max_marks Int     @db.SmallInt
+  major_max_marks Int     @db.SmallInt
+  total_max_marks Int     @db.SmallInt
+  pass_marks      Int     @db.SmallInt
+
+  coursescheme course_scheme @relation("SchemeSubjects", fields: [scheme_id], references: [scheme_id])
+
+  @@id([paper_id, scheme_id])
+}
+
+/**
+ * ===================== Student Schemas =====================
+ */
+
+model students {
+  student_id        String   @id @db.VarChar(12)
+  name              String   @db.VarChar(100)
+  gender            String?  @db.Char(1)
+  category          String?  @db.VarChar(20)
+  domicile          String?  @db.VarChar(20)
+  parent_income     String?  @db.VarChar(20)
+  date_of_birth     DateTime
+  place_of_birth    String?  @db.VarChar(50)
+  admission_date    DateTime
+  mobile            String?  @unique @db.VarChar(15)
+  email             String?  @unique @db.VarChar(100)
+  present_address   String?  @db.VarChar(255)
+  permanent_address String?  @db.VarChar(255)
+  user_id           String?  @unique
+
+  course_id String  @db.Char(3)
+  course    courses @relation(fields: [course_id], references: [course_id])
+
+  qualifications student_educational_qualifications[]
+  parents        student_parents?
+  reimbursement  fee_reimbursement?
+  undertaking    undertakings?
+
+  user user? @relation("StudentUser")
+}
+
+model student_educational_qualifications {
+  student_id       String   @db.VarChar(12)
+  exam_passed      String   @db.VarChar(20)
+  school_college   String   @db.VarChar(100)
+  board_university String   @db.VarChar(100)
+  year             Int      @db.SmallInt
+  percentage       Decimal? @db.Decimal(5, 2)
+  pcm_marks        Decimal? @db.Decimal(5, 2)
+
+  student students @relation(fields: [student_id], references: [student_id])
+
+  @@id([student_id, exam_passed])
+}
+
+model student_parents {
+  student_id            String  @id @db.VarChar(12)
+  father_name           String? @db.VarChar(100)
+  father_occupation     String? @db.VarChar(100)
+  father_qualification  String? @db.VarChar(50)
+  father_mobile         String? @db.VarChar(15)
+  father_email          String? @db.VarChar(100)
+  father_office_address String? @db.VarChar(255)
+
+  mother_name           String? @db.VarChar(100)
+  mother_occupation     String? @db.VarChar(100)
+  mother_qualification  String? @db.VarChar(50)
+  mother_mobile         String? @db.VarChar(15)
+  mother_email          String? @db.VarChar(100)
+  mother_office_address String? @db.VarChar(255)
+
+  student students @relation(fields: [student_id], references: [student_id])
+}
+
+model fee_reimbursement {
+  student_id           String   @id @db.VarChar(12)
+  agency               String?  @db.VarChar(50)
+  reimbursement_amount Decimal? @db.Decimal(10, 2)
+
+  student students @relation(fields: [student_id], references: [student_id])
+}
+
+model undertakings {
+  student_id        String   @id @db.VarChar(12)
+  antiragging_refno String   @db.VarChar(50)
+  agreement_date    DateTime @default(now())
+
+  student students @relation(fields: [student_id], references: [student_id])
+}
+
+/**
+ * ===================== User & Roles =====================
+ */
+
+enum role {
+  student
+  faculty
+  admin
+}
+
+model user {
+  id           String  @id @default(uuid())
+  username     String  @unique
+  email        String  @unique
+  passwordhash String
+  role         role
+  status       Boolean @default(true)
+  avatar       String
+
+  studentid String? @unique
+  facultyid String? @unique
+  adminid   String? @unique
+
+  student students? @relation("StudentUser", fields: [studentid], references: [student_id])
+  faculty faculty?  @relation("FacultyUser", fields: [facultyid], references: [faculty_id])
+  admin   admins?   @relation("AdminUser", fields: [adminid], references: [admin_id])
+
+  createdat DateTime @default(now())
+  updatedat DateTime @updatedAt
+}
+
+model faculty {
+  faculty_id    String   @id
+  name          String
+  gender        String?  @db.Char(1)
+  email         String   @unique
+  mobile        String?  @db.VarChar(15)
+  department    String
+  designation   String?
+  qualification String?
+  experience    Int?
+  doj           DateTime
+  status        Boolean  @default(true)
+
+  user_id String? @unique
+  user    user?   @relation("FacultyUser")
+}
+
+model admins {
+  admin_id    String   @id
+  name        String
+  email       String   @unique
+  mobile      String?  @db.VarChar(15)
+  department  String?
+  designation String?
+  role_desc   String?
+  doj         DateTime
+  status      Boolean  @default(true)
+
+  user_id String? @unique
+  user    user?   @relation("AdminUser")
+}

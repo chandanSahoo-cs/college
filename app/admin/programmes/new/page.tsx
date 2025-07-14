@@ -11,6 +11,7 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { GraduationCap, Home, ArrowLeft } from "lucide-react"
+import { addProgramme } from "@/action/programmes.action"
 
 const formSchema = z.object({
   Prog_ID: z.string().min(1, "Program ID is required"),
@@ -18,8 +19,8 @@ const formSchema = z.object({
   Prog_Short_Name: z.string().min(1, "Program short name is required"),
   University_School: z.string().min(1, "University/School is required"),
   Semester_Annual: z.enum(["0", "1"]),
-  Min_Duration_in_years: z.number().min(1, "Minimum duration is required").max(99, "Duration must be between 1 and 99 years"),
-  Max_Duration_in_years: z.number().min(1, "Maximum duration is required").max(99, "Duration must be between 1 and 99 years"),
+  Min_Duration_in_years: z.coerce.number().min(1, "Minimum duration is required").max(99, "Duration must be between 1 and 99 years"),
+  Max_Duration_in_years: z.coerce.number().min(1, "Maximum duration is required").max(99, "Duration must be between 1 and 99 years"),
   Regulatory_Body_Name: z.string().optional(),
   Regulatory_Body_ShortName: z.string().optional(),
 })
@@ -38,7 +39,7 @@ export default function NewProgrammePage() {
       Regulatory_Body_Name: "",
       Regulatory_Body_ShortName: "",
       University_School: "",
-      Semester_Annual: undefined,
+      Semester_Annual: "0",
       Min_Duration_in_years: 0,
       Max_Duration_in_years: 0,
     },
@@ -46,10 +47,14 @@ export default function NewProgrammePage() {
 
   const onSubmit = async (values: FormValues) => {
     try {
-      // Here you would typically send the data to your backend
-      console.log("Programme data:", values)
-
-      // Show success message and redirect
+      const formattedValues = {
+        ...values,
+        Min_Duration_in_years: Number(values.Min_Duration_in_years),
+        Max_Duration_in_years: Number(values.Max_Duration_in_years),
+      };
+      console.log("Programme data:", formattedValues)
+      await addProgramme(formattedValues)
+      
       alert("Programme added successfully!")
       router.push("/admin/programmes")
     } catch (error) {
@@ -190,7 +195,7 @@ export default function NewProgrammePage() {
                       <FormItem>
                         <FormLabel>Min Duration (Years)*</FormLabel>
                         <FormControl>
-                          <Input type="number" placeholder="4" {...field} />
+                          <Input  placeholder="4" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -204,7 +209,7 @@ export default function NewProgrammePage() {
                       <FormItem>
                         <FormLabel>Max Duration (Years)*</FormLabel>
                         <FormControl>
-                          <Input type="number" placeholder="6" {...field} />
+                          <Input  placeholder="6" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
