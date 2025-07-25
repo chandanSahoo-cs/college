@@ -33,7 +33,7 @@ export default function AdminDashboard() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <Link href="/admin/programmes">
           {/* Programmes Management */}
-          <Card className="hover:shadow-lg transition-shadow">
+          <Card className="hover:shadow-lg transition-shadow cursor-pointer">
             <CardHeader>
               <div className="flex items-center">
                 <div className="bg-blue-100 p-2 rounded-lg mr-3">
@@ -50,7 +50,7 @@ export default function AdminDashboard() {
                 </Link>
 
           {/* Courses Management */}
-          <Card className="hover:shadow-lg transition-shadow" onClick={() => router.push('/admin/courses')}>
+          <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => router.push('/admin/courses')}>
             <CardHeader>
               <div className="flex items-center">
                 <div className="bg-green-100 p-2 rounded-lg mr-3">
@@ -66,7 +66,7 @@ export default function AdminDashboard() {
           </Card>
 
           {/* Course Intake Management */}
-          <Card className="hover:shadow-lg transition-shadow" onClick={() => router.push('/admin/intake')}>
+          <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => router.push('/admin/intake')}>
             <CardHeader>
               <div className="flex items-center">
                 <div className="bg-purple-100 p-2 rounded-lg mr-3">
@@ -82,7 +82,7 @@ export default function AdminDashboard() {
           </Card>
 
           {/* Course Schemes Management */}
-          <Card className="hover:shadow-lg transition-shadow" onClick={() => router.push('/admin/schemes')}>
+          <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => router.push('/admin/schemes')}>
             <CardHeader>
               <div className="flex items-center">
                 <div className="bg-orange-100 p-2 rounded-lg mr-3">
@@ -98,7 +98,7 @@ export default function AdminDashboard() {
           </Card>
 
           {/* Subject Master Management */}
-          <Card className="hover:shadow-lg transition-shadow" onClick={() => router.push('/admin/subjects')}>
+          <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => router.push('/admin/subjects')}>
             <CardHeader>
               <div className="flex items-center">
                 <div className="bg-red-100 p-2 rounded-lg mr-3">
@@ -114,7 +114,7 @@ export default function AdminDashboard() {
           </Card>
 
           {/* Students Management */}
-          <Card className="hover:shadow-lg transition-shadow">
+          <Card className="hover:shadow-lg transition-shadow cursor-pointer">
             <CardHeader>
               <div className="flex items-center">
                 <div className="bg-teal-100 p-2 rounded-lg mr-3">

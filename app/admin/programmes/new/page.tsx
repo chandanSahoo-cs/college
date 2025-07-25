@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { GraduationCap, Home, ArrowLeft } from "lucide-react"
 import { addProgramme } from "@/action/programmes.action"
+import { toast } from "sonner"
 
 const formSchema = z.object({
   Prog_ID: z.string().min(1, "Program ID is required"),
@@ -55,11 +56,11 @@ export default function NewProgrammePage() {
       console.log("Programme data:", formattedValues)
       await addProgramme(formattedValues)
       
-      alert("Programme added successfully!")
+      toast.success("Programme added successfully!")
       router.push("/admin/programmes")
     } catch (error) {
       console.error("Error adding programme:", error)
-      alert("Error adding programme. Please try again.")
+      toast.success("Error adding programme. Please try again.")
     }
   }
 
