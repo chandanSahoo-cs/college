@@ -16,12 +16,12 @@ const formSchema = z.object({
     required_error: "Please select an option",
   }),
   Agency: z.enum(["State Govt", "Central Govt", "Private Body"]).optional(),
-  Reimbursement_Amount: z
+  Reimbursement_Amount: z.coerce
     .string()
     .optional()
     .refine((val) => !val || !isNaN(Number.parseFloat(val)), { message: "Amount must be a number" })
     .refine((val) => !val || Number.parseFloat(val) >= 0, { message: "Amount must be greater than or equal to 0" })
-    .transform((val) => (val ? Number.parseFloat(val) : undefined)),
+    .optional(),
 })
 
 type FormValues = z.infer<typeof formSchema>

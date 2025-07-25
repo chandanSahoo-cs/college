@@ -20,21 +20,18 @@ const formSchema = z.object({
   Semester_Annual: z.enum(["1", "0"], {
     required_error: "System type is required",
   }),
-  Min_Duration_in_years: z
+  Min_Duration_in_years: z.coerce
     .string()
     .min(1, "Minimum duration is required")
-    .transform((val) => Number.parseInt(val))
-    .refine((val) => val > 0 && val <= 99, "Duration must be between 1 and 99 years"),
-  Max_Duration_in_years: z
+    .refine((val) => Number(val) > 0 && Number(val) <= 99, "Duration must be between 1 and 99 years"),
+  Max_Duration_in_years: z.coerce
     .string()
     .min(1, "Maximum duration is required")
-    .transform((val) => Number.parseInt(val))
-    .refine((val) => val > 0 && val <= 99, "Duration must be between 1 and 99 years"),
-  Total_Semester_Annual: z
+    .refine((val) => Number(val) > 0 && Number(val) <= 99, "Duration must be between 1 and 99 years"),
+  Total_Semester_Annual: z.coerce
     .string()
     .min(1, "Total semesters/years is required")
-    .transform((val) => Number.parseInt(val))
-    .refine((val) => val > 0 && val <= 99, "Must be between 1 and 99"),
+    .refine((val) => Number(val) > 0 && Number(val) <= 99, "Must be between 1 and 99"),
 })
 
 type FormValues = z.infer<typeof formSchema>
@@ -43,6 +40,7 @@ export default function NewCoursePage() {
   const router = useRouter()
 
   const form = useForm<FormValues>({
+    
     resolver: zodResolver(formSchema),
     defaultValues: {
       Course_ID: "",
@@ -50,9 +48,9 @@ export default function NewCoursePage() {
       Course_Short_Name: "",
       Prog_ID: "",
       Semester_Annual: undefined,
-      Min_Duration_in_years: "",
-      Max_Duration_in_years: "",
-      Total_Semester_Annual: "",
+      Min_Duration_in_years: "1",
+      Max_Duration_in_years: "1",
+      Total_Semester_Annual: "1",
     },
   })
 
@@ -204,7 +202,7 @@ export default function NewCoursePage() {
                       <FormItem>
                         <FormLabel>Min Duration (Years)*</FormLabel>
                         <FormControl>
-                          <Input type="number" placeholder="4" {...field} />
+                          <Input type="string" placeholder="4" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -218,7 +216,7 @@ export default function NewCoursePage() {
                       <FormItem>
                         <FormLabel>Max Duration (Years)*</FormLabel>
                         <FormControl>
-                          <Input type="number" placeholder="6" {...field} />
+                          <Input type="string" placeholder="6" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>

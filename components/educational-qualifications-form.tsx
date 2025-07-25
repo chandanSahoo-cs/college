@@ -18,20 +18,18 @@ const qualificationSchema = z.object({
   }),
   School_College: z.string().min(1, "School/College name is required").max(100),
   Board_University: z.string().min(1, "Board/University is required").max(100),
-  Year: z
+  Year: z.coerce
     .string()
     .min(4, "Year is required")
     .max(4)
-    .regex(/^\d{4}$/, "Must be a valid year"),
-  Percentage: z
+    .refine((val) => Number(val) >= 1950 && Number(val) <= new Date().getFullYear(), "Year must be between 1950 and current year"),
+  Percentage: z.coerce
     .string()
     .min(1, "Percentage is required")
-    .transform((val) => Number.parseFloat(val))
-    .refine((val) => val >= 0 && val <= 100, "Percentage must be between 0 and 100"),
-  PCM_Marks: z
+    .refine((val) => Number(val) >= 0 && Number(val) <= 100, "Percentage must be between 0 and 100"),
+  PCM_Marks: z.coerce
     .string()
-    .transform((val) => (val ? Number.parseFloat(val) : undefined))
-    .refine((val) => val === undefined || (val >= 0 && val <= 100), "PCM marks must be between 0 and 100")
+    .refine((val) => val === undefined || (Number(val) >= 0 && Number(val) <= 100), "PCM marks must be between 0 and 100")
     .optional(),
 })
 

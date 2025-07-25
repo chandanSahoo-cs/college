@@ -17,11 +17,10 @@ const formSchema = z.object({
   Scheme_ID: z.string().min(1, "Scheme ID is required").max(12),
   Paper_Code: z.string().min(1, "Paper code is required").max(10),
   Paper_Name: z.string().min(1, "Paper name is required").max(100),
-  Credits: z
+  Credits: z.coerce
     .string()
     .min(1, "Credits is required")
-    .transform((val) => Number.parseInt(val))
-    .refine((val) => val >= 0 && val <= 9, "Credits must be between 0 and 9"),
+    .refine((val) => Number(val) >= 0 && Number(val) <= 9, "Credits must be between 0 and 9"),
   Type: z.enum(["1", "0"], {
     required_error: "Type is required",
   }),
@@ -36,21 +35,18 @@ const formSchema = z.object({
   Kind: z.enum(["1", "0"], {
     required_error: "Kind is required",
   }),
-  Minor_Max_Marks: z
+  Minor_Max_Marks: z.coerce
     .string()
     .min(1, "Minor max marks is required")
-    .transform((val) => Number.parseInt(val))
-    .refine((val) => val >= 0 && val <= 999, "Marks must be between 0 and 999"),
-  Major_Max_Marks: z
+    .refine((val) => Number(val) >= 0 && Number(val) <= 999, "Marks must be between 0 and 999"),
+  Major_Max_Marks: z.coerce
     .string()
     .min(1, "Major max marks is required")
-    .transform((val) => Number.parseInt(val))
-    .refine((val) => val >= 0 && val <= 999, "Marks must be between 0 and 999"),
-  Pass_Marks: z
+    .refine((val) => Number(val) >= 0 && Number(val) <= 999, "Marks must be between 0 and 999"),
+  Pass_Marks: z.coerce
     .string()
     .min(1, "Pass marks is required")
-    .transform((val) => Number.parseInt(val))
-    .refine((val) => val >= 0 && val <= 999, "Marks must be between 0 and 999"),
+    .refine((val) => Number(val) >= 0 && Number(val) <= 999, "Marks must be between 0 and 999"),
 })
 
 type FormValues = z.infer<typeof formSchema>
@@ -60,6 +56,7 @@ export default function NewSubjectPage() {
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
+   
     defaultValues: {
       Paper_ID: "",
       Scheme_ID: "",
