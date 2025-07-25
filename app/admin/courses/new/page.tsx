@@ -7,28 +7,28 @@ import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { GraduationCap, Home, ArrowLeft } from "lucide-react"
 
 const formSchema = z.object({
-  Course_ID: z.string().min(1, "Course ID is required").max(3),
-  Course_Name: z.string().min(1, "Course name is required").max(100),
-  Course_Short_Name: z.string().min(1, "Short name is required").max(20),
-  Prog_ID: z.string().min(1, "Programme ID is required").max(10),
-  Semester_Annual: z.enum(["1", "0"], {
+  course_id: z.string().min(1, "Course ID is required").max(3),
+  course_name: z.string().min(1, "Course name is required").max(100),
+  course_short_name: z.string().min(1, "Short name is required").max(20),
+  prog_id: z.string().min(1, "Programme ID is required").max(10),
+  semester_annual: z.enum(["1", "0"], {
     required_error: "System type is required",
   }),
-  Min_Duration_in_years: z.coerce
+  min_duration_in_years: z.coerce
     .string()
     .min(1, "Minimum duration is required")
     .refine((val) => Number(val) > 0 && Number(val) <= 99, "Duration must be between 1 and 99 years"),
-  Max_Duration_in_years: z.coerce
+  max_duration_in_years: z.coerce
     .string()
     .min(1, "Maximum duration is required")
     .refine((val) => Number(val) > 0 && Number(val) <= 99, "Duration must be between 1 and 99 years"),
-  Total_Semester_Annual: z.coerce
+  total_semester_annual: z.coerce
     .string()
     .min(1, "Total semesters/years is required")
     .refine((val) => Number(val) > 0 && Number(val) <= 99, "Must be between 1 and 99"),
@@ -43,14 +43,14 @@ export default function NewCoursePage() {
     
     resolver: zodResolver(formSchema),
     defaultValues: {
-      Course_ID: "",
-      Course_Name: "",
-      Course_Short_Name: "",
-      Prog_ID: "",
-      Semester_Annual: undefined,
-      Min_Duration_in_years: "1",
-      Max_Duration_in_years: "1",
-      Total_Semester_Annual: "1",
+      course_id: "",
+      course_name: "",
+      course_short_name: "",
+      prog_id: "",
+      semester_annual: undefined,
+      min_duration_in_years: "1",
+      max_duration_in_years: "1",
+      total_semester_annual: "1",
     },
   })
 
@@ -104,14 +104,14 @@ export default function NewCoursePage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <FormField
                     control={form.control}
-                    name="Course_ID"
+                    name="course_id"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Course ID*</FormLabel>
                         <FormControl>
                           <Input placeholder="e.g., CSE" {...field} />
                         </FormControl>
-                        <FormDescription>3-character course identifier</FormDescription>
+                        
                         <FormMessage />
                       </FormItem>
                     )}
@@ -119,14 +119,13 @@ export default function NewCoursePage() {
 
                   <FormField
                     control={form.control}
-                    name="Course_Short_Name"
+                    name="course_short_name"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Short Name*</FormLabel>
                         <FormControl>
                           <Input placeholder="e.g., CSE" {...field} />
                         </FormControl>
-                        <FormDescription>Abbreviated course name</FormDescription>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -135,15 +134,14 @@ export default function NewCoursePage() {
 
                 <FormField
                   control={form.control}
-                  name="Course_Name"
+                  name="course_name"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Course Name*</FormLabel>
                       <FormControl>
                         <Input placeholder="e.g., Computer Science and Engineering" {...field} />
                       </FormControl>
-                      <FormDescription>Full name of the course</FormDescription>
-                      <FormMessage />
+                        <FormMessage />
                     </FormItem>
                   )}
                 />
@@ -151,7 +149,7 @@ export default function NewCoursePage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <FormField
                     control={form.control}
-                    name="Prog_ID"
+                    name="prog_id"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Programme ID*</FormLabel>
@@ -173,7 +171,7 @@ export default function NewCoursePage() {
 
                   <FormField
                     control={form.control}
-                    name="Semester_Annual"
+                    name="semester_annual"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>System Type*</FormLabel>
@@ -197,7 +195,7 @@ export default function NewCoursePage() {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   <FormField
                     control={form.control}
-                    name="Min_Duration_in_years"
+                    name="min_duration_in_years"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Min Duration (Years)*</FormLabel>
@@ -211,7 +209,7 @@ export default function NewCoursePage() {
 
                   <FormField
                     control={form.control}
-                    name="Max_Duration_in_years"
+                    name="max_duration_in_years"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Max Duration (Years)*</FormLabel>
@@ -225,7 +223,7 @@ export default function NewCoursePage() {
 
                   <FormField
                     control={form.control}
-                    name="Total_Semester_Annual"
+                    name="total_semester_annual"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Total Semesters*</FormLabel>
