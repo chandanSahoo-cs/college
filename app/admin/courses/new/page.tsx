@@ -7,64 +7,92 @@ import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { GraduationCap, Home, ArrowLeft } from "lucide-react"
+import { createCourse } from "@/action/courses.action"
+import { getAllProgrammes } from "@/action/programmes.action";
+import { toast } from "sonner"
+import { useState, useEffect } from "react";
 
 const formSchema = z.object({
-  Course_ID: z.string().min(1, "Course ID is required").max(3),
-  Course_Name: z.string().min(1, "Course name is required").max(100),
-  Course_Short_Name: z.string().min(1, "Short name is required").max(20),
-  Prog_ID: z.string().min(1, "Programme ID is required").max(10),
-  Semester_Annual: z.enum(["1", "0"], {
+  course_id: z.string().min(1, "Course ID is required").max(3),
+  course_name: z.string().min(1, "Course name is required").max(100),
+  course_short_name: z.string().min(1, "Short name is required").max(20),
+  prog_id: z.string().min(1, "Programme ID is required").max(10),
+  semester_annual: z.enum(["1", "0"], {
     required_error: "System type is required",
   }),
-  Min_Duration_in_years: z.coerce
-    .string()
+  min_duration_in_years: z.coerce.number()
     .min(1, "Minimum duration is required")
     .refine((val) => Number(val) > 0 && Number(val) <= 99, "Duration must be between 1 and 99 years"),
-  Max_Duration_in_years: z.coerce
-    .string()
+  max_duration_in_years: z.coerce.number()
     .min(1, "Maximum duration is required")
     .refine((val) => Number(val) > 0 && Number(val) <= 99, "Duration must be between 1 and 99 years"),
-  Total_Semester_Annual: z.coerce
-    .string()
+  total_semester_annual: z.coerce.number()
     .min(1, "Total semesters/years is required")
     .refine((val) => Number(val) > 0 && Number(val) <= 99, "Must be between 1 and 99"),
 })
 
 type FormValues = z.infer<typeof formSchema>
 
-export default function NewCoursePage() {
+export default function NewCoursePage() { 
   const router = useRouter()
+  const [isLoading, setIsLoading] = useState(false);
+  const [programmes, setProgrammes] = useState<{prog_id: string; prog_name: string}[]>([]);
+
+  // Fetch programmes on component mount
+  useEffect(() => {
+    const fetchProgrammes = async () => {
+      try {
+        const data = await getAllProgrammes();
+        if (data) {
+          setProgrammes(data);
+        }
+      } catch (error) {
+        console.error("Failed to fetch programmes:", error);
+        toast.error("Failed to load programme options");
+      }
+    };
+
+    fetchProgrammes();
+  }, []);
 
   const form = useForm<FormValues>({
     
     resolver: zodResolver(formSchema),
     defaultValues: {
-      Course_ID: "",
-      Course_Name: "",
-      Course_Short_Name: "",
-      Prog_ID: "",
-      Semester_Annual: undefined,
-      Min_Duration_in_years: "1",
-      Max_Duration_in_years: "1",
-      Total_Semester_Annual: "1",
+      course_id: "",
+      course_name: "",
+      course_short_name: "",
+      prog_id: "",
+      semester_annual: "1",
+      min_duration_in_years: 1,
+      max_duration_in_years: 1,
+      total_semester_annual: 1,
     },
   })
 
   const onSubmit = async (values: FormValues) => {
     try {
+      const formattedValues = {
+        ...values,
+        semester_annual: Number(values.semester_annual),
+        min_duration_in_years: Number(values.min_duration_in_years),
+        max_duration_in_years: Number(values.max_duration_in_years),
+        total_semester_annual: Number(values.total_semester_annual),
+      }
+      await createCourse(formattedValues)
       // Here you would typically send the data to your backend
-      console.log("Course data:", values)
+      console.log("Course data:", formattedValues)
 
       // Show success message and redirect
-      alert("Course added successfully!")
+      toast.success("Course added successfully!")
       router.push("/admin/courses")
     } catch (error) {
       console.error("Error adding course:", error)
-      alert("Error adding course. Please try again.")
+      toast.error("Error adding course. Please try again.")
     }
   }
 
@@ -104,14 +132,14 @@ export default function NewCoursePage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <FormField
                     control={form.control}
-                    name="Course_ID"
+                    name="course_id"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Course ID*</FormLabel>
                         <FormControl>
                           <Input placeholder="e.g., CSE" {...field} />
                         </FormControl>
-                        <FormDescription>3-character course identifier</FormDescription>
+                        
                         <FormMessage />
                       </FormItem>
                     )}
@@ -119,14 +147,13 @@ export default function NewCoursePage() {
 
                   <FormField
                     control={form.control}
-                    name="Course_Short_Name"
+                    name="course_short_name"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Short Name*</FormLabel>
                         <FormControl>
                           <Input placeholder="e.g., CSE" {...field} />
                         </FormControl>
-                        <FormDescription>Abbreviated course name</FormDescription>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -135,15 +162,14 @@ export default function NewCoursePage() {
 
                 <FormField
                   control={form.control}
-                  name="Course_Name"
+                  name="course_name"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Course Name*</FormLabel>
                       <FormControl>
                         <Input placeholder="e.g., Computer Science and Engineering" {...field} />
                       </FormControl>
-                      <FormDescription>Full name of the course</FormDescription>
-                      <FormMessage />
+                        <FormMessage />
                     </FormItem>
                   )}
                 />
@@ -151,7 +177,7 @@ export default function NewCoursePage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <FormField
                     control={form.control}
-                    name="Prog_ID"
+                    name="prog_id"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Programme ID*</FormLabel>
@@ -162,8 +188,14 @@ export default function NewCoursePage() {
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
-                            <SelectItem value="BTECH001">BTECH001 - Bachelor of Technology</SelectItem>
-                            <SelectItem value="MCA001">MCA001 - Master of Computer Applications</SelectItem>
+                            {programmes.map((programme) => (
+                              <SelectItem 
+                                key={programme.prog_id} 
+                                value={programme.prog_id}
+                              >
+                                {`${programme.prog_id} - ${programme.prog_name}`}
+                              </SelectItem>
+                            ))}
                           </SelectContent>
                         </Select>
                         <FormMessage />
@@ -173,7 +205,7 @@ export default function NewCoursePage() {
 
                   <FormField
                     control={form.control}
-                    name="Semester_Annual"
+                    name="semester_annual"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>System Type*</FormLabel>
@@ -197,7 +229,7 @@ export default function NewCoursePage() {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   <FormField
                     control={form.control}
-                    name="Min_Duration_in_years"
+                    name="min_duration_in_years"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Min Duration (Years)*</FormLabel>
@@ -211,7 +243,7 @@ export default function NewCoursePage() {
 
                   <FormField
                     control={form.control}
-                    name="Max_Duration_in_years"
+                    name="max_duration_in_years"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Max Duration (Years)*</FormLabel>
@@ -225,7 +257,7 @@ export default function NewCoursePage() {
 
                   <FormField
                     control={form.control}
-                    name="Total_Semester_Annual"
+                    name="total_semester_annual"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Total Semesters*</FormLabel>
