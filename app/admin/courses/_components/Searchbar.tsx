@@ -197,24 +197,24 @@ export default function SearchBar({ courses }: SearchBarProps) {
                   </TableRow>
                 ) : (
                   filteredCourses.map((course) => (
-                    <TableRow key={course.Course_ID} className="hover:bg-gray-50">
+                    <TableRow key={course.course_id} className="hover:bg-gray-50">
                       <TableCell className="font-medium text-gray-900">
-                        {course.Course_ID}
+                        {course.course_id}
                       </TableCell>
                       <TableCell className="max-w-xs">
                         <div className="font-medium text-gray-900">
-                          {course.Course_Name}
+                          {course.course_name}
                         </div>
                       </TableCell>
                       <TableCell className="font-medium text-blue-600">
-                        {course.Course_Short_Name}
+                        {course.course_short_name}
                       </TableCell>
-                      <TableCell>{course.Prog_ID}</TableCell>
+                      <TableCell>{course.prog_id}</TableCell>
                       <TableCell>
-                        {course.Semester_Annual === 1 ? 'Semester' : 'Annual'}
+                        {course.semester_annual === 1 ? 'Semester' : 'Annual'}
                       </TableCell>
                       <TableCell>
-                        {course.Min_Duration_in_years} - {course.Max_Duration_in_years} years
+                        {course.min_duration_in_years} - {course.max_duration_in_years} years
                       </TableCell>
                       <TableCell className="text-center">
                         <div className="flex justify-center space-x-2">
@@ -224,7 +224,7 @@ export default function SearchBar({ courses }: SearchBarProps) {
                             asChild
                             className="h-8 w-8 p-0"
                           >
-                            <Link href={`/admin/courses/${course.Course_ID}/edit`}>
+                            <Link href={`/admin/courses/edit/${course.course_id}`}>
                               <Edit className="h-4 w-4" />
                             </Link>
                           </Button>
@@ -232,7 +232,7 @@ export default function SearchBar({ courses }: SearchBarProps) {
                             variant="ghost"
                             size="icon"
                             className="h-8 w-8 p-0 text-red-600 hover:text-red-700 hover:bg-red-50"
-                            onClick={() => handleDelete(course.Course_ID)}
+                            onClick={() => handleDelete(course.course_id)}
                           >
                             <Trash2 className="h-4 w-4" />
                           </Button>
