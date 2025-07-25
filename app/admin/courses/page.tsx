@@ -1,11 +1,12 @@
-"use client"
+"use server"
 
 import { useState } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card"
-import { GraduationCap, Home, Plus } from "lucide-react"
-import SearchBar from "./_components/Searchbar"
+import { GraduationCap, Home, Plus } from "lucide-react"  
+import SearchBar from  "./_components/Searchbar"
+import { getAllCourses } from "@/action/courses.action"
 
 // Mock data - replace with actual data fetching
 const mockCourses = [
@@ -41,8 +42,10 @@ const mockCourses = [
   },
 ]
 
-export default function CoursesPage() {
-  const [courses] = useState(mockCourses)
+export default async function CoursesPage() {
+
+  const { courses, total }= await  getAllCourses()
+ console.log(courses)
 
   return (
     <div className="min-h-screen bg-gray-50">

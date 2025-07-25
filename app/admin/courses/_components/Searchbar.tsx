@@ -1,6 +1,6 @@
 "use client";
 
-// import { deleteCourseById } from "@/action/courses.action";
+import { deleteCourseById } from "@/action/courses.action";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -103,7 +103,7 @@ export default function SearchBar({ courses }: SearchBarProps) {
     const ok = await confirm();
     if (!ok) return;
     try {
-      // await deleteCourseById(id);
+      await deleteCourseById(id);
       toast.success("Course deleted successfully");
       router.refresh();
     } catch (error) {
