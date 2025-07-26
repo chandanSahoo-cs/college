@@ -99,7 +99,7 @@ model subject_master {
 
 model students {
   student_id        String   @id @db.VarChar(12)
-  name              String   @db.VarChar(100)
+                String   @db.VarChar(100)
   gender            String?  @db.Char(1)
   category          String?  @db.VarChar(20)
   domicile          String?  @db.VarChar(20)

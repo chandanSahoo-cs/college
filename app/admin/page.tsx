@@ -114,7 +114,7 @@ export default function AdminDashboard() {
           </Card>
 
           {/* Students Management */}
-          <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+          <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => router.push('/admin/students')}>
             <CardHeader>
               <div className="flex items-center">
                 <div className="bg-teal-100 p-2 rounded-lg mr-3">

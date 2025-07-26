@@ -9,38 +9,7 @@ import SearchBar from  "./_components/Searchbar"
 import { getAllCourses } from "@/action/courses.action"
 
 // Mock data - replace with actual data fetching
-const mockCourses = [
-  {
-    Course_ID: "CSE",
-    Course_Name: "Computer Science and Engineering",
-    Course_Short_Name: "CSE",
-    Prog_ID: "BTECH001",
-    Semester_Annual: 1,
-    Min_Duration_in_years: 4,
-    Max_Duration_in_years: 6,
-    Total_Semester_Annual: 8,
-  },
-  {
-    Course_ID: "ECE",
-    Course_Name: "Electronics and Communication Engineering",
-    Course_Short_Name: "ECE",
-    Prog_ID: "BTECH001",
-    Semester_Annual: 1,
-    Min_Duration_in_years: 4,
-    Max_Duration_in_years: 6,
-    Total_Semester_Annual: 8,
-  },
-  {
-    Course_ID: "MCA",
-    Course_Name: "Master of Computer Applications",
-    Course_Short_Name: "MCA",
-    Prog_ID: "MCA001",
-    Semester_Annual: 1,
-    Min_Duration_in_years: 2,
-    Max_Duration_in_years: 4,
-    Total_Semester_Annual: 4,
-  },
-]
+
 
 export default async function CoursesPage() {
 
