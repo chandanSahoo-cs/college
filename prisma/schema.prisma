@@ -111,7 +111,6 @@ model students {
   email             String?  @unique @db.VarChar(100)
   present_address   String?  @db.VarChar(255)
   permanent_address String?  @db.VarChar(255)
-  user_id           String?  @unique
 
   course_id String  @db.Char(3)
   course    courses @relation(fields: [course_id], references: [course_id])
@@ -120,8 +119,6 @@ model students {
   parents        student_parents?
   reimbursement  fee_reimbursement?
   undertaking    undertakings?
-
-  user user? @relation("StudentUser")
 }
 
 model student_educational_qualifications {
@@ -192,11 +189,9 @@ model user {
   status       Boolean @default(true)
   avatar       String
 
-  studentid String? @unique
   facultyid String? @unique
   adminid   String? @unique
 
-  student students? @relation("StudentUser", fields: [studentid], references: [student_id])
   faculty faculty?  @relation("FacultyUser", fields: [facultyid], references: [faculty_id])
   admin   admins?   @relation("AdminUser", fields: [adminid], references: [admin_id])
 
