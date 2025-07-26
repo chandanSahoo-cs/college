@@ -1,18 +1,37 @@
-"use client"
+"use client";
 
-import { z } from "zod"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import { useRouter } from "next/navigation"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { GraduationCap, Home, ArrowLeft } from "lucide-react"
-import { addProgramme } from "@/action/programmes.action"
-import { toast } from "sonner"
+import { addProgramme } from "@/action/programmes.action";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { ArrowLeft, GraduationCap, Home } from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { z } from "zod";
 
 const formSchema = z.object({
   Prog_ID: z.string().min(1, "Program ID is required"),
@@ -20,16 +39,22 @@ const formSchema = z.object({
   Prog_Short_Name: z.string().min(1, "Program short name is required"),
   University_School: z.string().min(1, "University/School is required"),
   Semester_Annual: z.enum(["0", "1"]),
-  Min_Duration_in_years: z.coerce.number().min(1, "Minimum duration is required").max(99, "Duration must be between 1 and 99 years"),
-  Max_Duration_in_years: z.coerce.number().min(1, "Maximum duration is required").max(99, "Duration must be between 1 and 99 years"),
+  Min_Duration_in_years: z.coerce
+    .number()
+    .min(1, "Minimum duration is required")
+    .max(99, "Duration must be between 1 and 99 years"),
+  Max_Duration_in_years: z.coerce
+    .number()
+    .min(1, "Maximum duration is required")
+    .max(99, "Duration must be between 1 and 99 years"),
   Regulatory_Body_Name: z.string().optional(),
   Regulatory_Body_ShortName: z.string().optional(),
-})
+});
 
-type FormValues = z.infer<typeof formSchema>
+type FormValues = z.infer<typeof formSchema>;
 
 export default function NewProgrammePage() {
-  const router = useRouter()
+  const router = useRouter();
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -44,7 +69,7 @@ export default function NewProgrammePage() {
       Min_Duration_in_years: 0,
       Max_Duration_in_years: 0,
     },
-  })
+  });
 
   const onSubmit = async (values: FormValues) => {
     try {
@@ -53,16 +78,16 @@ export default function NewProgrammePage() {
         Min_Duration_in_years: Number(values.Min_Duration_in_years),
         Max_Duration_in_years: Number(values.Max_Duration_in_years),
       };
-      console.log("Programme data:", formattedValues)
-      await addProgramme(formattedValues)
-      
-      toast.success("Programme added successfully!")
-      router.push("/admin/programmes")
+      console.log("Programme data:", formattedValues);
+      await addProgramme(formattedValues);
+
+      toast.success("Programme added successfully!");
+      router.push("/admin/programmes");
     } catch (error) {
-      console.error("Error adding programme:", error)
-      toast.success("Error adding programme. Please try again.")
+      console.error("Error adding programme:", error);
+      toast.success("Error adding programme. Please try again.");
     }
-  }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -75,12 +100,16 @@ export default function NewProgrammePage() {
           </div>
           <div className="flex gap-2">
             <Link href="/admin/programmes">
-              <Button variant="outline" className="text-white border-white hover:bg-white hover:text-[#0c4da2]">
+              <Button
+                variant="outline"
+                className="bg-white/10 text-white border-white/20 hover:bg-white hover:text-[#0c4da2] hover:border-white transition-all duration-200 backdrop-blur-sm font-medium">
                 <ArrowLeft className="h-4 w-4 mr-2" /> Back to Programmes
               </Button>
             </Link>
             <Link href="/">
-              <Button variant="outline" className="text-white border-white hover:bg-white hover:text-[#0c4da2]">
+              <Button
+                variant="outline"
+                className="bg-white/10 text-white border-white/20 hover:bg-white hover:text-[#0c4da2] hover:border-white transition-all duration-200 backdrop-blur-sm font-medium">
                 <Home className="h-4 w-4 mr-2" /> Home
               </Button>
             </Link>
@@ -92,11 +121,15 @@ export default function NewProgrammePage() {
         <Card className="max-w-2xl mx-auto">
           <CardHeader>
             <CardTitle className="text-2xl">Add New Programme</CardTitle>
-            <CardDescription>Create a new academic programme for the institute</CardDescription>
+            <CardDescription>
+              Create a new academic programme for the institute
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+              <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <FormField
                     control={form.control}
@@ -107,7 +140,7 @@ export default function NewProgrammePage() {
                         <FormControl>
                           <Input placeholder="e.g., BTECH001" {...field} />
                         </FormControl>
-                       
+
                         <FormMessage />
                       </FormItem>
                     )}
@@ -122,7 +155,7 @@ export default function NewProgrammePage() {
                         <FormControl>
                           <Input placeholder="e.g., B.Tech" {...field} />
                         </FormControl>
-                        
+
                         <FormMessage />
                       </FormItem>
                     )}
@@ -136,9 +169,12 @@ export default function NewProgrammePage() {
                     <FormItem>
                       <FormLabel>Programme Name*</FormLabel>
                       <FormControl>
-                        <Input placeholder="e.g., Bachelor of Technology" {...field} />
+                        <Input
+                          placeholder="e.g., Bachelor of Technology"
+                          {...field}
+                        />
                       </FormControl>
-                      
+
                       <FormMessage />
                     </FormItem>
                   )}
@@ -152,7 +188,10 @@ export default function NewProgrammePage() {
                       <FormItem>
                         <FormLabel>Regulatory Body Name</FormLabel>
                         <FormControl>
-                          <Input placeholder="e.g., All India Council for Technical Education" {...field} />
+                          <Input
+                            placeholder="e.g., All India Council for Technical Education"
+                            {...field}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -196,7 +235,7 @@ export default function NewProgrammePage() {
                       <FormItem>
                         <FormLabel>Min Duration (Years)*</FormLabel>
                         <FormControl>
-                          <Input  placeholder="4" {...field} />
+                          <Input placeholder="4" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -210,7 +249,7 @@ export default function NewProgrammePage() {
                       <FormItem>
                         <FormLabel>Max Duration (Years)*</FormLabel>
                         <FormControl>
-                          <Input  placeholder="6" {...field} />
+                          <Input placeholder="6" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -224,7 +263,9 @@ export default function NewProgrammePage() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>System Type*</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}>
                         <FormControl>
                           <SelectTrigger>
                             <SelectValue placeholder="Select system type" />
@@ -252,5 +293,5 @@ export default function NewProgrammePage() {
         </Card>
       </div>
     </div>
-  )
+  );
 }

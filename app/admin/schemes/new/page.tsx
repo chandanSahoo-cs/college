@@ -100,14 +100,14 @@ export default function NewSchemePage() {
             <Link href="/admin/schemes">
               <Button
                 variant="outline"
-                className="text-white border-white hover:bg-white hover:text-[#0c4da2]">
+                className="bg-white/10 text-white border-white/20 hover:bg-white hover:text-[#0c4da2] hover:border-white transition-all duration-200 backdrop-blur-sm font-medium">
                 <ArrowLeft className="h-4 w-4 mr-2" /> Back to Schemes
               </Button>
             </Link>
             <Link href="/">
               <Button
                 variant="outline"
-                className="text-white border-white hover:bg-white hover:text-[#0c4da2]">
+                className="bg-white/10 text-white border-white/20 hover:bg-white hover:text-[#0c4da2] hover:border-white transition-all duration-200 backdrop-blur-sm font-medium">
                 <Home className="h-4 w-4 mr-2" /> Home
               </Button>
             </Link>

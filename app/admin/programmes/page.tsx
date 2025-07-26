@@ -1,14 +1,19 @@
-'use server'
+"use server";
 
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button" 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"    
-import { Input } from "@/components/ui/input"
-import { GraduationCap, Home, Plus, Search, Edit, Trash2 } from "lucide-react"
-import { getAllProgrammes } from "@/action/programmes.action"
-import { redirect } from "next/navigation"
-import SearchBar from "./_components/SearchBar"
-import Link from "next/link"
+import { getAllProgrammes } from "@/action/programmes.action";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { GraduationCap, Home, Plus } from "lucide-react";
+import Link from "next/link";
+import { redirect } from "next/navigation";
+import SearchBar from "./_components/SearchBar";
 
 // Convert Prisma data to match our UI format
 const formatProgrammeData = (programme: any) => ({
@@ -21,67 +26,79 @@ const formatProgrammeData = (programme: any) => ({
   Semester_Annual: programme.semester_annual,
   Min_Duration_in_years: programme.min_duration_in_years,
   Max_Duration_in_years: programme.max_duration_in_years,
-})
+});
 
 export default async function ProgrammesPage() {
   try {
-    const programmes = await getAllProgrammes()
-    const formattedProgrammes = programmes?.map(formatProgrammeData)
+    const programmes = await getAllProgrammes();
+    const formattedProgrammes = programmes?.map(formatProgrammeData);
 
     if (!formattedProgrammes || formattedProgrammes.length === 0) {
-      redirect('/admin/programmes/new')
+      redirect("/admin/programmes/new");
     }
 
     return (
       <div className="min-h-screen bg-gray-50">
         {/* Header */}
         <header className="bg-[#0c4da2] text-white py-4 px-6 shadow-md">
-        <div className="container mx-auto flex justify-between items-center">
-          <div className="flex items-center">
-            <GraduationCap className="h-6 w-6 mr-2" />
-            <h1 className="text-xl font-bold">BPIT - Programmes Management</h1>
+          <div className="container mx-auto flex justify-between items-center">
+            <div className="flex items-center">
+              <GraduationCap className="h-6 w-6 mr-2" />
+              <h1 className="text-xl font-bold">
+                BPIT - Programmes Management
+              </h1>
+            </div>
+            <div className="flex gap-2">
+              <Link href="/admin">
+                <Button
+                  variant="outline"
+                  className="bg-white/10 text-white border-white/20 hover:bg-white hover:text-[#0c4da2] hover:border-white transition-all duration-200 backdrop-blur-sm font-medium">
+                  Admin Dashboard
+                </Button>
+              </Link>
+              <Link href="/">
+                <Button
+                  variant="outline"
+                  className="bg-white/10 text-white border-white/20 hover:bg-white hover:text-[#0c4da2] hover:border-white transition-all duration-200 backdrop-blur-sm font-medium">
+                  <Home className="h-4 w-4 mr-2" /> Home
+                </Button>
+              </Link>
+            </div>
           </div>
-          <div className="flex gap-2">
-            <Link href="/admin">
-              <Button variant="outline" className="text-white border-white hover:bg-white hover:text-[#0c4da2]">
-                Admin Dashboard
-              </Button>
-            </Link>
-            <Link href="/">
-              <Button variant="outline" className="text-white border-white hover:bg-white hover:text-[#0c4da2]">
-                <Home className="h-4 w-4 mr-2" /> Home
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </header>
+        </header>
 
         {/* Main Content */}
         <main className="container mx-auto py-8 flex gap-4 w-full ">
           <Card className="w-full">
-          <CardHeader>
-            <div className="flex justify-between items-center">
-              <div>
-                <CardTitle className="text-2xl">Academic Programmes</CardTitle>
-                <CardDescription>Manage all academic programmes offered by the institute</CardDescription>
+            <CardHeader>
+              <div className="flex justify-between items-center">
+                <div>
+                  <CardTitle className="text-2xl">
+                    Academic Programmes
+                  </CardTitle>
+                  <CardDescription>
+                    Manage all academic programmes offered by the institute
+                  </CardDescription>
+                </div>
+                <Link href="/admin/programmes/new">
+                  <Button>
+                    <Plus className="h-4 w-4 mr-2" /> Add Programme
+                  </Button>
+                </Link>
               </div>
-              <Link href="/admin/programmes/new">
-                <Button>
-                  <Plus className="h-4 w-4 mr-2" /> Add Programme
-                </Button>
-              </Link>
-            </div>
-          </CardHeader>
+            </CardHeader>
             <CardContent>
               <SearchBar programmes={formattedProgrammes} />
-              <Badge variant="outline">Total: {formattedProgrammes.length}</Badge>
+              <Badge variant="outline">
+                Total: {formattedProgrammes.length}
+              </Badge>
             </CardContent>
           </Card>
         </main>
       </div>
-    )
+    );
   } catch (error) {
-    console.error('Error fetching programmes:', error)
-    redirect('/admin/programmes/new')
+    console.error("Error fetching programmes:", error);
+    redirect("/admin/programmes/new");
   }
 }

@@ -215,7 +215,12 @@ export default function SearchBar({ programmes }: SearchBarProps) {
                   filteredProgrammes.map((programme) => (
                     <TableRow
                       key={programme.Prog_ID}
-                      className="hover:bg-gray-50">
+                      className="hover:bg-gray-50"
+                      onClick={() => {
+                        router.push(
+                          `/admin/programmes/preview/${programme.Prog_ID}`
+                        );
+                      }}>
                       <TableCell className="font-medium text-gray-900">
                         {programme.Prog_ID}
                       </TableCell>
@@ -259,23 +264,27 @@ export default function SearchBar({ programmes }: SearchBarProps) {
                       <TableCell>
                         <div className="flex items-center justify-center gap-2">
                           <Button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                            }}
+                            variant="ghost"
+                            size="icon"
                             asChild
-                            variant="outline"
-                            size="sm"
-                            className="h-8 px-3 bg-transparent">
+                            className="h-8 w-8 p-0">
                             <Link
                               href={`/admin/programmes/edit/${programme.Prog_ID}`}>
-                              <Edit className="h-3 w-3 mr-1" />
-                              Edit
+                              <Edit className="h-4 w-4" />
                             </Link>
                           </Button>
                           <Button
-                            variant="destructive"
-                            size="sm"
-                            className="h-8 px-3"
-                            onClick={() => deleteProgramme(programme.Prog_ID)}>
-                            <Trash2 className="h-3 w-3 mr-1" />
-                            Delete
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8 p-0 text-red-600 hover:text-red-700 hover:bg-red-50"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              deleteProgramme(programme.Prog_ID);
+                            }}>
+                            <Trash2 className="h-4 w-4" />
                           </Button>
                         </div>
                       </TableCell>

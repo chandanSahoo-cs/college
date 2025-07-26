@@ -46,9 +46,9 @@ export default function SearchBar({ courses }: SearchBarProps) {
 
   const filteredCoursesByAttribute = (courses: any[], filter: FilterOption) => {
     if (!searchTerm) return courses;
-    
+
     const searchTermLower = searchTerm.toLowerCase();
-    
+
     switch (filter) {
       case "all":
         return courses.filter(
@@ -62,32 +62,32 @@ export default function SearchBar({ courses }: SearchBarProps) {
             course.Max_Duration_in_years?.toString() === searchTerm
         );
       case "Course ID":
-        return courses.filter(course => 
+        return courses.filter((course) =>
           course.Course_ID?.toLowerCase().includes(searchTermLower)
         );
       case "Course Name":
-        return courses.filter(course => 
+        return courses.filter((course) =>
           course.Course_Name?.toLowerCase().includes(searchTermLower)
         );
       case "Short Name":
-        return courses.filter(course => 
+        return courses.filter((course) =>
           course.Course_Short_Name?.toLowerCase().includes(searchTermLower)
         );
       case "Programme ID":
-        return courses.filter(course => 
+        return courses.filter((course) =>
           course.Prog_ID?.toLowerCase().includes(searchTermLower)
         );
       case "Semester/Annual":
         return courses.filter(
-          course => course.Semester_Annual?.toString() === searchTerm
+          (course) => course.Semester_Annual?.toString() === searchTerm
         );
       case "Min Duration":
         return courses.filter(
-          course => course.Min_Duration_in_years?.toString() === searchTerm
+          (course) => course.Min_Duration_in_years?.toString() === searchTerm
         );
       case "Max Duration":
         return courses.filter(
-          course => course.Max_Duration_in_years?.toString() === searchTerm
+          (course) => course.Max_Duration_in_years?.toString() === searchTerm
         );
       default:
         return courses;
@@ -188,16 +188,22 @@ export default function SearchBar({ courses }: SearchBarProps) {
               <TableBody>
                 {filteredCourses.length === 0 ? (
                   <TableRow>
-                    <TableCell 
-                      colSpan={7} 
-                      className="text-center py-8 text-gray-500"
-                    >
+                    <TableCell
+                      colSpan={7}
+                      className="text-center py-8 text-gray-500">
                       No courses found matching your search criteria.
                     </TableCell>
                   </TableRow>
                 ) : (
                   filteredCourses.map((course) => (
-                    <TableRow key={course.course_id} className="hover:bg-gray-50">
+                    <TableRow
+                      onClick={() =>
+                        router.push(
+                          `/admin/courses/preview/${course.course_id}`
+                        )
+                      }
+                      key={course.course_id}
+                      className="hover:bg-gray-50">
                       <TableCell className="font-medium text-gray-900">
                         {course.course_id}
                       </TableCell>
@@ -211,20 +217,22 @@ export default function SearchBar({ courses }: SearchBarProps) {
                       </TableCell>
                       <TableCell>{course.prog_id}</TableCell>
                       <TableCell>
-                        {course.semester_annual === 1 ? 'Semester' : 'Annual'}
+                        {course.semester_annual === 1 ? "Semester" : "Annual"}
                       </TableCell>
                       <TableCell>
-                        {course.min_duration_in_years} - {course.max_duration_in_years} years
+                        {course.min_duration_in_years} -{" "}
+                        {course.max_duration_in_years} years
                       </TableCell>
                       <TableCell className="text-center">
                         <div className="flex justify-center space-x-2">
                           <Button
+                            onClick={(e) => e.stopPropagation()}
                             variant="ghost"
                             size="icon"
                             asChild
-                            className="h-8 w-8 p-0"
-                          >
-                            <Link href={`/admin/courses/edit/${course.course_id}`}>
+                            className="h-8 w-8 p-0">
+                            <Link
+                              href={`/admin/courses/edit/${course.course_id}`}>
                               <Edit className="h-4 w-4" />
                             </Link>
                           </Button>
@@ -232,8 +240,10 @@ export default function SearchBar({ courses }: SearchBarProps) {
                             variant="ghost"
                             size="icon"
                             className="h-8 w-8 p-0 text-red-600 hover:text-red-700 hover:bg-red-50"
-                            onClick={() => handleDelete(course.course_id)}
-                          >
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleDelete(course.course_id);
+                            }}>
                             <Trash2 className="h-4 w-4" />
                           </Button>
                         </div>

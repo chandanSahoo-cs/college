@@ -1,6 +1,10 @@
 "use client";
 
-import { getCourseById, updateCourse, getAllProgrammes } from "@/action/courses.action";
+import {
+  getAllProgrammes,
+  getCourseById,
+  updateCourse,
+} from "@/action/courses.action";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -102,7 +106,7 @@ export default function EditCoursePage() {
             total_semester_annual: course.total_semester_annual,
           });
         }
-        
+
         // Fetch programmes for dropdown
         const programmesData = await getAllProgrammes();
         setProgrammes(programmesData);
@@ -123,7 +127,7 @@ export default function EditCoursePage() {
         ...values,
         semester_annual: Number(values.semester_annual),
       };
-      
+
       await updateCourse(id, updateData);
       toast.success("Course updated successfully!");
       router.push("/admin/courses");
@@ -154,16 +158,14 @@ export default function EditCoursePage() {
             <Link href="/admin/courses">
               <Button
                 variant="outline"
-                className="text-white border-white hover:bg-white hover:text-[#0c4da2]"
-              >
+                className="bg-white/10 text-white border-white/20 hover:bg-white hover:text-[#0c4da2] hover:border-white transition-all duration-200 backdrop-blur-sm font-medium">
                 <ArrowLeft className="h-4 w-4 mr-2" /> Back to Courses
               </Button>
             </Link>
             <Link href="/">
               <Button
                 variant="outline"
-                className="text-white border-white hover:bg-white hover:text-[#0c4da2]"
-              >
+                className="bg-white/10 text-white border-white/20 hover:bg-white hover:text-[#0c4da2] hover:border-white transition-all duration-200 backdrop-blur-sm font-medium">
                 <Home className="h-4 w-4 mr-2" /> Home
               </Button>
             </Link>
@@ -175,16 +177,13 @@ export default function EditCoursePage() {
         <Card className="max-w-2xl mx-auto">
           <CardHeader>
             <CardTitle className="text-2xl">Edit Course</CardTitle>
-            <CardDescription>
-              Update the course details below
-            </CardDescription>
+            <CardDescription>Update the course details below</CardDescription>
           </CardHeader>
           <CardContent>
             <Form {...form}>
               <form
                 onSubmit={form.handleSubmit(onSubmit)}
-                className="space-y-6"
-              >
+                className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <FormField
                     control={form.control}
@@ -245,8 +244,7 @@ export default function EditCoursePage() {
                         <FormLabel>Programme*</FormLabel>
                         <Select
                           onValueChange={field.onChange}
-                          defaultValue={field.value}
-                        >
+                          defaultValue={field.value}>
                           <FormControl>
                             <SelectTrigger>
                               <SelectValue placeholder="Select a programme" />
@@ -256,8 +254,7 @@ export default function EditCoursePage() {
                             {programmes.map((programme) => (
                               <SelectItem
                                 key={programme.prog_id}
-                                value={programme.prog_id}
-                              >
+                                value={programme.prog_id}>
                                 {programme.prog_name}
                               </SelectItem>
                             ))}
@@ -276,8 +273,7 @@ export default function EditCoursePage() {
                         <FormLabel>Term Type*</FormLabel>
                         <Select
                           onValueChange={field.onChange}
-                          defaultValue={field.value}
-                        >
+                          defaultValue={field.value}>
                           <FormControl>
                             <SelectTrigger>
                               <SelectValue placeholder="Select term type" />
@@ -347,8 +343,7 @@ export default function EditCoursePage() {
                   <Button
                     type="button"
                     variant="outline"
-                    onClick={() => router.push("/admin/courses")}
-                  >
+                    onClick={() => router.push("/admin/courses")}>
                     Cancel
                   </Button>
                   <Button type="submit">Update Course</Button>

@@ -160,25 +160,23 @@ export default function IntakeSearchBar({ intakes }: IntakeSearchBarProps) {
                       <TableCell>
                         <div className="flex justify-center gap-2">
                           <Button
+                            variant="ghost"
+                            size="icon"
                             asChild
-                            variant="outline"
-                            size="sm"
-                            className="h-8 px-3">
+                            className="h-8 w-8 p-0">
                             <Link
                               href={`/admin/intake/edit/${intake.Course_ID}?acad_year=${intake.Acad_Year}`}>
-                              <Edit className="h-3 w-3 mr-1" />
-                              Edit
+                              <Edit className="h-4 w-4" />
                             </Link>
                           </Button>
                           <Button
-                            variant="destructive"
-                            size="sm"
-                            className="h-8 px-3"
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8 p-0 text-red-600 hover:text-red-700 hover:bg-red-50"
                             onClick={() =>
                               deleteIntake(intake.Course_ID, intake.Acad_Year)
                             }>
-                            <Trash2 className="h-3 w-3 mr-1" />
-                            Delete
+                            <Trash2 className="h-4 w-4" />
                           </Button>
                         </div>
                       </TableCell>

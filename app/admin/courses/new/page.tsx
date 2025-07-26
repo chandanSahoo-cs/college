@@ -1,20 +1,39 @@
-"use client"
+"use client";
 
-import { z } from "zod"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import { useRouter } from "next/navigation"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { GraduationCap, Home, ArrowLeft } from "lucide-react"
-import { createCourse } from "@/action/courses.action"
+import { createCourse } from "@/action/courses.action";
 import { getAllProgrammes } from "@/action/programmes.action";
-import { toast } from "sonner"
-import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { ArrowLeft, GraduationCap, Home } from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { z } from "zod";
 
 const formSchema = z.object({
   course_id: z.string().min(1, "Course ID is required").max(3),
@@ -24,23 +43,37 @@ const formSchema = z.object({
   semester_annual: z.enum(["1", "0"], {
     required_error: "System type is required",
   }),
-  min_duration_in_years: z.coerce.number()
+  min_duration_in_years: z.coerce
+    .number()
     .min(1, "Minimum duration is required")
-    .refine((val) => Number(val) > 0 && Number(val) <= 99, "Duration must be between 1 and 99 years"),
-  max_duration_in_years: z.coerce.number()
+    .refine(
+      (val) => Number(val) > 0 && Number(val) <= 99,
+      "Duration must be between 1 and 99 years"
+    ),
+  max_duration_in_years: z.coerce
+    .number()
     .min(1, "Maximum duration is required")
-    .refine((val) => Number(val) > 0 && Number(val) <= 99, "Duration must be between 1 and 99 years"),
-  total_semester_annual: z.coerce.number()
+    .refine(
+      (val) => Number(val) > 0 && Number(val) <= 99,
+      "Duration must be between 1 and 99 years"
+    ),
+  total_semester_annual: z.coerce
+    .number()
     .min(1, "Total semesters/years is required")
-    .refine((val) => Number(val) > 0 && Number(val) <= 99, "Must be between 1 and 99"),
-})
+    .refine(
+      (val) => Number(val) > 0 && Number(val) <= 99,
+      "Must be between 1 and 99"
+    ),
+});
 
-type FormValues = z.infer<typeof formSchema>
+type FormValues = z.infer<typeof formSchema>;
 
-export default function NewCoursePage() { 
-  const router = useRouter()
+export default function NewCoursePage() {
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
-  const [programmes, setProgrammes] = useState<{prog_id: string; prog_name: string}[]>([]);
+  const [programmes, setProgrammes] = useState<
+    { prog_id: string; prog_name: string }[]
+  >([]);
 
   // Fetch programmes on component mount
   useEffect(() => {
@@ -60,7 +93,6 @@ export default function NewCoursePage() {
   }, []);
 
   const form = useForm<FormValues>({
-    
     resolver: zodResolver(formSchema),
     defaultValues: {
       course_id: "",
@@ -72,7 +104,7 @@ export default function NewCoursePage() {
       max_duration_in_years: 1,
       total_semester_annual: 1,
     },
-  })
+  });
 
   const onSubmit = async (values: FormValues) => {
     try {
@@ -82,19 +114,19 @@ export default function NewCoursePage() {
         min_duration_in_years: Number(values.min_duration_in_years),
         max_duration_in_years: Number(values.max_duration_in_years),
         total_semester_annual: Number(values.total_semester_annual),
-      }
-      await createCourse(formattedValues)
+      };
+      await createCourse(formattedValues);
       // Here you would typically send the data to your backend
-      console.log("Course data:", formattedValues)
+      console.log("Course data:", formattedValues);
 
       // Show success message and redirect
-      toast.success("Course added successfully!")
-      router.push("/admin/courses")
+      toast.success("Course added successfully!");
+      router.push("/admin/courses");
     } catch (error) {
-      console.error("Error adding course:", error)
-      toast.error("Error adding course. Please try again.")
+      console.error("Error adding course:", error);
+      toast.error("Error adding course. Please try again.");
     }
-  }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -107,12 +139,16 @@ export default function NewCoursePage() {
           </div>
           <div className="flex gap-2">
             <Link href="/admin/courses">
-              <Button variant="outline" className="text-white border-white hover:bg-white hover:text-[#0c4da2]">
+              <Button
+                variant="outline"
+                className="bg-white/10 text-white border-white/20 hover:bg-white hover:text-[#0c4da2] hover:border-white transition-all duration-200 backdrop-blur-sm font-medium">
                 <ArrowLeft className="h-4 w-4 mr-2" /> Back to Courses
               </Button>
             </Link>
             <Link href="/">
-              <Button variant="outline" className="text-white border-white hover:bg-white hover:text-[#0c4da2]">
+              <Button
+                variant="outline"
+                className="bg-white/10 text-white border-white/20 hover:bg-white hover:text-[#0c4da2] hover:border-white transition-all duration-200 backdrop-blur-sm font-medium">
                 <Home className="h-4 w-4 mr-2" /> Home
               </Button>
             </Link>
@@ -124,11 +160,15 @@ export default function NewCoursePage() {
         <Card className="max-w-2xl mx-auto">
           <CardHeader>
             <CardTitle className="text-2xl">Add New Course</CardTitle>
-            <CardDescription>Create a new course under an existing programme</CardDescription>
+            <CardDescription>
+              Create a new course under an existing programme
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+              <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <FormField
                     control={form.control}
@@ -139,7 +179,7 @@ export default function NewCoursePage() {
                         <FormControl>
                           <Input placeholder="e.g., CSE" {...field} />
                         </FormControl>
-                        
+
                         <FormMessage />
                       </FormItem>
                     )}
@@ -167,9 +207,12 @@ export default function NewCoursePage() {
                     <FormItem>
                       <FormLabel>Course Name*</FormLabel>
                       <FormControl>
-                        <Input placeholder="e.g., Computer Science and Engineering" {...field} />
+                        <Input
+                          placeholder="e.g., Computer Science and Engineering"
+                          {...field}
+                        />
                       </FormControl>
-                        <FormMessage />
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
@@ -181,7 +224,9 @@ export default function NewCoursePage() {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Programme ID*</FormLabel>
-                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}>
                           <FormControl>
                             <SelectTrigger>
                               <SelectValue placeholder="Select programme" />
@@ -189,10 +234,9 @@ export default function NewCoursePage() {
                           </FormControl>
                           <SelectContent>
                             {programmes.map((programme) => (
-                              <SelectItem 
-                                key={programme.prog_id} 
-                                value={programme.prog_id}
-                              >
+                              <SelectItem
+                                key={programme.prog_id}
+                                value={programme.prog_id}>
                                 {`${programme.prog_id} - ${programme.prog_name}`}
                               </SelectItem>
                             ))}
@@ -209,7 +253,9 @@ export default function NewCoursePage() {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>System Type*</FormLabel>
-                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}>
                           <FormControl>
                             <SelectTrigger>
                               <SelectValue placeholder="Select system type" />
@@ -282,5 +328,5 @@ export default function NewCoursePage() {
         </Card>
       </div>
     </div>
-  )
+  );
 }

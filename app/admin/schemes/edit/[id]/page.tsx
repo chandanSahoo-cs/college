@@ -1,9 +1,6 @@
 "use client";
 
-import {
-  getSchemeById,
-  updateSchemeById,
-} from "@/action/scheme.action";
+import { getSchemeById, updateSchemeById } from "@/action/scheme.action";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -129,16 +126,14 @@ export default function EditSchemePage() {
             <Link href="/admin/schemes">
               <Button
                 variant="outline"
-                className="text-white border-white hover:bg-white hover:text-[#0c4da2]"
-              >
+                className="bg-white/10 text-white border-white/20 hover:bg-white hover:text-[#0c4da2] hover:border-white transition-all duration-200 backdrop-blur-sm font-medium">
                 <ArrowLeft className="h-4 w-4 mr-2" /> Back to Schemes
               </Button>
             </Link>
             <Link href="/">
               <Button
                 variant="outline"
-                className="text-white border-white hover:bg-white hover:text-[#0c4da2]"
-              >
+                className="bg-white/10 text-white border-white/20 hover:bg-white hover:text-[#0c4da2] hover:border-white transition-all duration-200 backdrop-blur-sm font-medium">
                 <Home className="h-4 w-4 mr-2" /> Home
               </Button>
             </Link>
@@ -150,12 +145,15 @@ export default function EditSchemePage() {
         <Card className="max-w-3xl mx-auto">
           <CardHeader>
             <CardTitle>Edit Course Scheme</CardTitle>
-            <CardDescription>Modify course scheme details below.</CardDescription>
+            <CardDescription>
+              Modify course scheme details below.
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-
+              <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="space-y-6">
                 {/* Course ID and Academic Year */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <FormField
@@ -222,8 +220,7 @@ export default function EditSchemePage() {
                         <FormLabel>System*</FormLabel>
                         <Select
                           onValueChange={field.onChange}
-                          value={field.value}
-                        >
+                          value={field.value}>
                           <FormControl>
                             <SelectTrigger>
                               <SelectValue placeholder="Select type" />
@@ -320,7 +317,10 @@ export default function EditSchemePage() {
                     <FormItem>
                       <FormLabel>Regulatory Body Name</FormLabel>
                       <FormControl>
-                        <Input placeholder="All India Council for Technical Education" {...field} />
+                        <Input
+                          placeholder="All India Council for Technical Education"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

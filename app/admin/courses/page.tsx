@@ -1,20 +1,23 @@
-"use server"
+"use server";
 
-import { useState } from "react"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card"
-import { GraduationCap, Home, Plus } from "lucide-react"  
-import SearchBar from  "./_components/Searchbar"
-import { getAllCourses } from "@/action/courses.action"
+import { getAllCourses } from "@/action/courses.action";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { GraduationCap, Home, Plus } from "lucide-react";
+import Link from "next/link";
+import SearchBar from "./_components/Searchbar";
 
 // Mock data - replace with actual data fetching
 
-
 export default async function CoursesPage() {
-
-  const { courses, total }= await  getAllCourses()
- console.log(courses)
+  const { courses, total } = await getAllCourses();
+  console.log(courses);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -27,12 +30,16 @@ export default async function CoursesPage() {
           </div>
           <div className="flex gap-2">
             <Link href="/admin">
-              <Button variant="outline" className="text-white border-white hover:bg-white hover:text-[#0c4da2]">
+              <Button
+                variant="outline"
+                className="bg-white/10 text-white border-white/20 hover:bg-white hover:text-[#0c4da2] hover:border-white transition-all duration-200 backdrop-blur-sm font-medium">
                 Admin Dashboard
               </Button>
             </Link>
             <Link href="/">
-              <Button variant="outline" className="text-white border-white hover:bg-white hover:text-[#0c4da2]">
+              <Button
+                variant="outline"
+                className="bg-white/10 text-white border-white/20 hover:bg-white hover:text-[#0c4da2] hover:border-white transition-all duration-200 backdrop-blur-sm font-medium">
                 <Home className="h-4 w-4 mr-2" /> Home
               </Button>
             </Link>
@@ -46,7 +53,9 @@ export default async function CoursesPage() {
             <div className="flex justify-between items-center">
               <div>
                 <CardTitle className="text-2xl">Courses</CardTitle>
-                <CardDescription>Manage all courses offered under different programmes</CardDescription>
+                <CardDescription>
+                  Manage all courses offered under different programmes
+                </CardDescription>
               </div>
               <Link href="/admin/courses/new">
                 <Button>
@@ -61,5 +70,5 @@ export default async function CoursesPage() {
         </Card>
       </div>
     </div>
-  )
+  );
 }

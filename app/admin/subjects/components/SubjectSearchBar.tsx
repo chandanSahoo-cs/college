@@ -198,25 +198,23 @@ export default function SubjectSearchBar({ subjects }: SearchBarProps) {
                       <TableCell>
                         <div className="flex items-center justify-center gap-2">
                           <Button
+                            variant="ghost"
+                            size="icon"
                             asChild
-                            variant="outline"
-                            size="sm"
-                            className="h-8 px-3 bg-transparent">
+                            className="h-8 w-8 p-0">
                             <Link
                               href={`/admin/subjects/edit/${subject.paper_id}?scheme=${subject.scheme_id}`}>
-                              <Edit className="h-3 w-3 mr-1" />
-                              Edit
+                              <Edit className="h-4 w-4" />
                             </Link>
                           </Button>
                           <Button
-                            variant="destructive"
-                            size="sm"
-                            className="h-8 px-3"
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8 p-0 text-red-600 hover:text-red-700 hover:bg-red-50"
                             onClick={() =>
                               deleteSubject(subject.paper_id, subject.scheme_id)
                             }>
-                            <Trash2 className="h-3 w-3 mr-1" />
-                            Delete
+                            <Trash2 className="h-4 w-4" />
                           </Button>
                         </div>
                       </TableCell>
