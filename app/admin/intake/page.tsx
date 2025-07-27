@@ -30,7 +30,7 @@ export default async function CourseIntakesPage() {
     const formattedIntakes = intakes?.map(formatIntakeData);
 
     if (!formattedIntakes || formattedIntakes.length === 0) {
-      redirect("/admin/intakes/new");
+      redirect("/admin/intake/new");
     }
 
     return (
@@ -72,7 +72,7 @@ export default async function CourseIntakesPage() {
                     Manage annual course intake records
                   </CardDescription>
                 </div>
-                <Link href="/admin/intakes/new">
+                <Link href="/admin/intake/new">
                   <Button>
                     <Plus className="h-4 w-4 mr-2" /> Add Intake
                   </Button>
@@ -89,6 +89,6 @@ export default async function CourseIntakesPage() {
     );
   } catch (error) {
     console.error("Error fetching intakes:", error);
-    redirect("/admin/intakes/new");
+    redirect("/admin/intake/new");
   }
 }
