@@ -16,6 +16,8 @@ import { Search, Edit, Trash2, Eye, ChevronLeft, ChevronRight } from "lucide-rea
 import Link from "next/link"
 import { searchStudents, deleteStudent } from "@/action/students.action"
 import { useToast } from "@/components/ui/use-toast"
+import { useConfirm } from "@/hooks/useConfirm"
+
 
 export interface Student {
   student_id: string
@@ -49,6 +51,7 @@ export default function SearchBar({ initialStudents, total, totalPages, currentP
   const [currentPageState, setCurrentPageState] = useState(currentPage)
   const [totalState, setTotalState] = useState(total)
   const [totalPagesState, setTotalPagesState] = useState(totalPages)
+ const [ConfirmDialog, Confirm ] = useConfirm("Are you sure ","This action cannot be undone.")
  if(total === 0){
     router.push('/admin/students/new')
  }
@@ -94,7 +97,8 @@ export default function SearchBar({ initialStudents, total, totalPages, currentP
   }
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this student? This action cannot be undone.')) {
+    const result = await Confirm()
+    if (!result) {
       return
     }
     
@@ -131,6 +135,8 @@ export default function SearchBar({ initialStudents, total, totalPages, currentP
   }
 
   return (
+    <>
+    <ConfirmDialog />
     <div className="space-y-4">
       <form onSubmit={handleSearch} className="relative">
         <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
@@ -244,5 +250,6 @@ export default function SearchBar({ initialStudents, total, totalPages, currentP
         </div>
       )}
     </div>
+    </>
   )
 }

@@ -2,6 +2,7 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { ChevronRight, GraduationCap, Users, BookOpen, Award } from "lucide-react"
+import Image from "next/image"
 
 export default function LandingPage() {
   return (
@@ -29,11 +30,7 @@ export default function LandingPage() {
             <Link href="/admin" className="hover:underline">
               Admin
             </Link>
-            <Link href="/student-registration">
-              <Button variant="outline" className="text-white border-white hover:bg-white hover:text-[#0c4da2]">
-                Student Portal
-              </Button>
-            </Link>
+
           </nav>
         </div>
       </header>
@@ -49,19 +46,19 @@ export default function LandingPage() {
               </p>
               <div className="flex gap-4">
                 <Link href="/student-registration">
-                  <Button className="bg-white text-blue-900 hover:bg-gray-100">Student Registration</Button>
+                  <Button className="bg-white/10 text-white border-white/20 hover:bg-white hover:text-[#0c4da2] hover:border-white transition-all duration-200 backdrop-blur-sm font-medium">Student Registration</Button>
                 </Link>
                 <Link href="/academics">
-                  <Button variant="outline" className="text-white border-white hover:bg-white hover:text-blue-900">
+                  <Button variant="outline" className="bg-white/10 text-white border-white/20 hover:bg-white hover:text-[#0c4da2] hover:border-white transition-all duration-200 backdrop-blur-sm font-medium">
                     Explore Programs
                   </Button>
                 </Link>
               </div>
             </div>
             <div className="md:w-1/2">
-              <img src="/placeholder.svg?height=400&width=600" alt="BPIT Campus" className="rounded-lg shadow-lg" />
+              <Image src="/BPIT-banner.png"  width={1000} height={1000} alt="BPIT Campus" className="rounded-lg shadow-lg" />
             </div>
-          </div>
+          </div>    
         </div>
       </section>
 
