@@ -1,49 +1,63 @@
-"use client"
+"use client";
 
-import { useSearchParams } from 'next/navigation'
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card"
-import { Home, Plus, Users } from "lucide-react"
-import SearchBar from "./_components/SearchBar"
-import { getStudents } from "@/action/students.action"
-import { useEffect, useState } from 'react'
-import {Student} from "@/app/admin/students/_components/SearchBar"
-import { useRouter } from "next/navigation"
+import { getStudents } from "@/action/students.action";
+import { Student } from "@/app/admin/students/_components/SearchBar";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Home, Plus, Users } from "lucide-react";
+import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import SearchBar from "./_components/SearchBar";
 
 export default function StudentsPage() {
-  const router = useRouter()
-  const searchParams = useSearchParams()
-  const [students, setStudents] = useState<Student[]>([])
-  const [total, setTotal] = useState(0)
-  const [totalPages, setTotalPages] = useState(0)
-  const [isLoading, setIsLoading] = useState(true)
-  
-  const currentPage = searchParams.get('page') ? Number(searchParams.get('page')) : 1
-  const limit = 10
-  
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const [students, setStudents] = useState<Student[]>([]);
+  const [total, setTotal] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const currentPage = searchParams.get("page")
+    ? Number(searchParams.get("page"))
+    : 1;
+  const limit = 10;
+
   useEffect(() => {
     const fetchStudents = async () => {
-      setIsLoading(true)
+      setIsLoading(true);
       try {
-        const { data, total, totalPages } = await getStudents(currentPage, limit)
-        setStudents(data)
-        setTotal(total)
-        setTotalPages(totalPages)
+        const { data, total, totalPages } = await getStudents(
+          currentPage,
+          limit
+        );
+        setStudents(data);
+        setTotal(total);
+        setTotalPages(totalPages);
       } catch (error) {
-        console.error('Error fetching students:', error)
+        console.error("Error fetching students:", error);
       } finally {
-        setIsLoading(false)
+        setIsLoading(false);
       }
-    }
-    
-    fetchStudents()
-  }, [currentPage])
+    };
+
+    fetchStudents();
+  }, [currentPage]);
 
   if (isLoading) {
-    return <div className="flex items-center justify-center min-h-screen">Loading...</div>
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        Loading...
+      </div>
+    );
   }
-  
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
@@ -74,7 +88,9 @@ export default function StudentsPage() {
             <div className="flex justify-between items-center">
               <div>
                 <CardTitle className="text-2xl">Students</CardTitle>
-                <CardDescription>Manage all registered students and their information</CardDescription>
+                <CardDescription>
+                  Manage all registered students and their information
+                </CardDescription>
               </div>
               <Link href="/admin/students/new">
                 <Button>
@@ -84,10 +100,15 @@ export default function StudentsPage() {
             </div>
           </CardHeader>
           <CardContent>
-            <SearchBar initialStudents={students} total={total} totalPages={totalPages} currentPage={currentPage} />
+            <SearchBar
+              initialStudents={students}
+              total={total}
+              totalPages={totalPages}
+              currentPage={currentPage}
+            />
           </CardContent>
         </Card>
       </div>
     </div>
-  )
+  );
 }

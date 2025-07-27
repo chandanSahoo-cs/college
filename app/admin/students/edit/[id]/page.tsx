@@ -151,7 +151,7 @@ export default function EditStudentPage() {
         <div className="container mx-auto flex justify-between items-center">
           <div className="flex items-center">
             <Link href="/admin/students" className="mr-4">
-              <Button variant="ghost" size="icon" className="text-white hover:bg-white/20">
+              <Button variant="ghost" size="icon" className="bg-white/10 text-white border-white/20 hover:bg-white hover:text-[#0c4da2] hover:border-white transition-all duration-200 backdrop-blur-sm font-medium">
                 <ArrowLeft className="h-5 w-5" />
               </Button>
             </Link>
