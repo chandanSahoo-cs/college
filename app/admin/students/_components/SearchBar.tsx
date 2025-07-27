@@ -49,7 +49,9 @@ export default function SearchBar({ initialStudents, total, totalPages, currentP
   const [currentPageState, setCurrentPageState] = useState(currentPage)
   const [totalState, setTotalState] = useState(total)
   const [totalPagesState, setTotalPagesState] = useState(totalPages)
-
+ if(total === 0){
+    router.push('/admin/students/new')
+ }
   useEffect(() => {
     setStudents(initialStudents)
     setCurrentPageState(currentPage)

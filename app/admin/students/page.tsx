@@ -9,8 +9,10 @@ import SearchBar from "./_components/SearchBar"
 import { getStudents } from "@/action/students.action"
 import { useEffect, useState } from 'react'
 import {Student} from "@/app/admin/students/_components/SearchBar"
+import { useRouter } from "next/navigation"
 
 export default function StudentsPage() {
+  const router = useRouter()
   const searchParams = useSearchParams()
   const [students, setStudents] = useState<Student[]>([])
   const [total, setTotal] = useState(0)
