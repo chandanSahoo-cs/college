@@ -1,6 +1,7 @@
-"use server";
+"use client";
 
-import { getAllCourses } from "@/action/courses.action";
+import { Course, getAllCourses } from "@/action/courses.action";
+import Loader from "@/app/loading";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -11,12 +12,34 @@ import {
 } from "@/components/ui/card";
 import { GraduationCap, Home, Plus } from "lucide-react";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import SearchBar from "./_components/Searchbar";
 
 // Mock data - replace with actual data fetching
 
 export default async function CoursesPage() {
-  const { courses, total } = await getAllCourses();
+  const [courses, setCourses] = useState<Course[]>();
+
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProgrammes = async () => {
+      setIsLoading(true);
+      try {
+        const { courses, total } = await getAllCourses();
+        setCourses(courses);
+      } catch (error) {
+        console.error("Error fetching programmes:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchProgrammes();
+  }, []);
+
+  if (isLoading) {
+    return <Loader message="Loading courses" />;
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -64,7 +87,7 @@ export default async function CoursesPage() {
             </div>
           </CardHeader>
           <CardContent>
-            <SearchBar courses={courses} />
+            <SearchBar courses={courses!} />
           </CardContent>
         </Card>
       </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { deleteCourseById } from "@/action/courses.action";
+import { Course, deleteCourseById } from "@/action/courses.action";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -26,7 +26,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 
 interface SearchBarProps {
-  courses: any[];
+  courses: Course[];
 }
 
 type FilterOption =
@@ -105,7 +105,7 @@ export default function SearchBar({ courses }: SearchBarProps) {
     try {
       await deleteCourseById(id);
       toast.success("Course deleted successfully");
-      router.refresh();
+      window.location.reload();
     } catch (error) {
       toast.error("Failed to delete course");
     }
