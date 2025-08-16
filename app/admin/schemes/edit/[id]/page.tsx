@@ -35,6 +35,7 @@ import { toast } from "sonner";
 import { z } from "zod";
 
 const formSchema = z.object({
+  scheme_id: z.string().min(1, "Scheme ID is required"),
   course_id: z.string().min(1, "Course ID is required"),
   acad_year: z.coerce.number().min(2000, "Year must be valid"),
   semester_annual: z.enum(["0", "1"]),
@@ -57,6 +58,7 @@ export default function EditSchemePage() {
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      scheme_id: "",
       course_id: "",
       acad_year: 2024,
       semester_annual: "1",
@@ -77,6 +79,7 @@ export default function EditSchemePage() {
         const scheme = await getSchemeById(id as string);
         if (scheme) {
           form.reset({
+            scheme_id: scheme.scheme_id,
             course_id: scheme.course_id,
             acad_year: scheme.acad_year,
             semester_annual: scheme.semester_annual.toString() as "0" | "1",
@@ -157,6 +160,21 @@ export default function EditSchemePage() {
                 {/* Course ID and Academic Year */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <FormField
+                    disabled
+                    control={form.control}
+                    name="scheme_id"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Scheme ID*</FormLabel>
+                        <FormControl>
+                          <Input {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    disabled
                     control={form.control}
                     name="course_id"
                     render={({ field }) => (

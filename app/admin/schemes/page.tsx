@@ -1,6 +1,7 @@
-"use server";
+"use client";
 
 import { getAllSchemes } from "@/action/scheme.action";
+import Loader from "@/app/loading";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,8 +13,23 @@ import {
 } from "@/components/ui/card";
 import { GraduationCap, Home, Plus } from "lucide-react";
 import Link from "next/link";
-import { redirect } from "next/navigation";
+import { useEffect, useState } from "react";
 import SchemeSearchBar from "./components/SchemeSearchBar";
+
+export type SchemeType = {
+  regulatory_body_name: string | null;
+  regulatory_body_shortname: string | null;
+  university_school: string;
+  semester_annual: number;
+  min_duration_in_years: number;
+  max_duration_in_years: number;
+  course_id: string;
+  total_semester_annual: number;
+  scheme_id: string;
+  acad_year: number;
+  min_credits: number;
+  max_credits: number;
+};
 
 // Convert Prisma scheme object to UI-friendly format
 const formatSchemeData = (scheme: any) => ({
@@ -31,13 +47,30 @@ const formatSchemeData = (scheme: any) => ({
   regulatory_body_shortname: scheme.regulatory_body_shortname || "",
 });
 
-export default async function SchemesPage() {
+export default function SchemesPage() {
   try {
-    const schemes = await getAllSchemes();
-    const formattedSchemes = schemes?.map(formatSchemeData);
+    const [formattedSchemes, setFormattedSchemes] = useState<SchemeType[]>([]);
 
-    if (!formattedSchemes || formattedSchemes.length === 0) {
-      redirect("/admin/schemes/new");
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+      const fetchSchemes = async () => {
+        setIsLoading(true);
+        try {
+          const data = await getAllSchemes();
+          const schemes = data?.map(formatSchemeData);
+          setFormattedSchemes(schemes);
+        } catch (error) {
+          console.error("Error fetching programmes:", error);
+        } finally {
+          setIsLoading(false);
+        }
+      };
+      fetchSchemes();
+    }, []);
+
+    if (isLoading) {
+      return <Loader message="Loading courses schemes" />;
     }
 
     return (
@@ -87,7 +120,7 @@ export default async function SchemesPage() {
               </div>
             </CardHeader>
             <CardContent>
-              <SchemeSearchBar schemes={formattedSchemes} />
+              <SchemeSearchBar schemes={formattedSchemes!} />
               <Badge variant="outline">Total: {formattedSchemes.length}</Badge>
             </CardContent>
           </Card>
@@ -96,6 +129,5 @@ export default async function SchemesPage() {
     );
   } catch (error) {
     console.error("Error fetching schemes:", error);
-    redirect("/admin/schemes/new");
   }
 }

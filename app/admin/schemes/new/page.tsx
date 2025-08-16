@@ -7,6 +7,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
+import { getAllCourses } from "@/action/courses.action";
 import { addScheme } from "@/action/scheme.action";
 import { Button } from "@/components/ui/button";
 import {
@@ -33,6 +34,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ArrowLeft, GraduationCap, Home } from "lucide-react";
+import { useEffect, useState } from "react";
 
 const formSchema = z.object({
   scheme_id: z.string().min(1, "Scheme ID is required"),
@@ -53,6 +55,26 @@ type FormValues = z.infer<typeof formSchema>;
 
 export default function NewSchemePage() {
   const router = useRouter();
+
+  const [courses, setCourses] = useState<
+    { course_id: string; course_name: string }[]
+  >([]);
+
+  useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        const { courses, total } = await getAllCourses();
+        if (courses) {
+          setCourses(courses);
+        }
+      } catch (error) {
+        console.error("Failed to fetch courses:", error);
+        toast.error("Failed to load course options");
+      }
+    };
+
+    fetchCourses();
+  }, []);
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -149,13 +171,24 @@ export default function NewSchemePage() {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Course ID*</FormLabel>
-                        <FormControl>
-                          <Input
-                            placeholder="e.g., CSE"
-                            maxLength={3}
-                            {...field}
-                          />
-                        </FormControl>
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}>
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select programme" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {courses.map((course) => (
+                              <SelectItem
+                                key={course.course_id}
+                                value={course.course_id}>
+                                {`${course.course_id} - ${course.course_name}`}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
                         <FormMessage />
                       </FormItem>
                     )}

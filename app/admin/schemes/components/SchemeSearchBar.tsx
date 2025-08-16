@@ -24,24 +24,10 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
-
-interface Scheme {
-  scheme_id: string;
-  course_id: string;
-  acad_year: number;
-  semester_annual: number;
-  min_duration_in_years: number;
-  max_duration_in_years: number;
-  total_semester_annual: number;
-  min_credits: number;
-  max_credits: number;
-  regulatory_body_name?: string;
-  regulatory_body_shortname?: string;
-  university_school: string;
-}
+import { SchemeType } from "../page";
 
 interface SearchBarProps {
-  schemes: Scheme[];
+  schemes: SchemeType[];
 }
 
 type FilterOption =
@@ -74,7 +60,7 @@ export default function SchemeSearchBar({ schemes }: SearchBarProps) {
     try {
       await deleteSchemeById(scheme_id);
       toast.success("Scheme deleted successfully");
-      router.refresh();
+      window.location.reload();
     } catch (error) {
       toast.error("Failed to delete scheme");
     }
@@ -94,7 +80,7 @@ export default function SchemeSearchBar({ schemes }: SearchBarProps) {
           check(scheme.course_id) ||
           check(scheme.acad_year) ||
           check(scheme.university_school) ||
-          check(scheme.regulatory_body_name)
+          check(scheme.regulatory_body_name as string)
         );
       default:
         return check((scheme as any)[filter]);
