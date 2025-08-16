@@ -1,4 +1,5 @@
 "use server";
+export const dynamic = "force-dynamic";
 
 import { getAllProgrammes } from "@/action/programmes.action";
 import { Badge } from "@/components/ui/badge";
