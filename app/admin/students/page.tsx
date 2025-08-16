@@ -2,6 +2,7 @@
 
 import { getStudents } from "@/action/students.action";
 import { Student } from "@/app/admin/students/_components/SearchBar";
+import Loader from "@/app/loading";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -12,12 +13,11 @@ import {
 } from "@/components/ui/card";
 import { Home, Plus, Users } from "lucide-react";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import SearchBar from "./_components/SearchBar";
 
 export default function StudentsPage() {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const [students, setStudents] = useState<Student[]>([]);
   const [total, setTotal] = useState(0);
@@ -51,11 +51,7 @@ export default function StudentsPage() {
   }, [currentPage]);
 
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        Loading...
-      </div>
-    );
+    return <Loader message="Loading students..." />;
   }
 
   return (
@@ -69,12 +65,16 @@ export default function StudentsPage() {
           </div>
           <div className="flex gap-2">
             <Link href="/admin">
-              <Button variant="outline" className="bg-white/10 text-white border-white/20 hover:bg-white hover:text-[#0c4da2] hover:border-white transition-all duration-200 backdrop-blur-sm font-medium">
+              <Button
+                variant="outline"
+                className="bg-white/10 text-white border-white/20 hover:bg-white hover:text-[#0c4da2] hover:border-white transition-all duration-200 backdrop-blur-sm font-medium">
                 Admin Dashboard
               </Button>
             </Link>
             <Link href="/">
-              <Button variant="outline" className="bg-white/10 text-white border-white/20 hover:bg-white hover:text-[#0c4da2] hover:border-white transition-all duration-200 backdrop-blur-sm font-medium">
+              <Button
+                variant="outline"
+                className="bg-white/10 text-white border-white/20 hover:bg-white hover:text-[#0c4da2] hover:border-white transition-all duration-200 backdrop-blur-sm font-medium">
                 <Home className="h-4 w-4 mr-2" /> Home
               </Button>
             </Link>
