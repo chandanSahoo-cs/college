@@ -24,9 +24,10 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
+import { ProgrammesType } from "../page";
 
 interface SearchBarProps {
-  programmes: any[];
+  programmes: ProgrammesType;
 }
 
 type FilterOption =
@@ -127,7 +128,7 @@ export default function SearchBar({ programmes }: SearchBarProps) {
     router.refresh();
   };
 
-  const filteredProgrammes = filteredProgrammesByAttribute(programmes, filter);
+  const filteredProgrammes = filteredProgrammesByAttribute(programmes!, filter);
 
   return (
     <>
@@ -165,7 +166,7 @@ export default function SearchBar({ programmes }: SearchBarProps) {
 
           {/* Results count */}
           <div className="mt-3 text-sm text-gray-600">
-            Showing {filteredProgrammes.length} of {programmes.length}{" "}
+            Showing {filteredProgrammes.length} of {programmes?.length}{" "}
             programmes
           </div>
         </div>

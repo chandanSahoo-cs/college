@@ -1,5 +1,4 @@
-"use server";
-export const dynamic = "force-dynamic";
+"use client";
 
 import { getAllProgrammes } from "@/action/programmes.action";
 import { Badge } from "@/components/ui/badge";
@@ -14,6 +13,7 @@ import {
 import { GraduationCap, Home, Plus } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { useEffect, useState } from "react";
 import SearchBar from "./_components/SearchBar";
 
 // Convert Prisma data to match our UI format
@@ -29,13 +29,48 @@ const formatProgrammeData = (programme: any) => ({
   Max_Duration_in_years: programme.max_duration_in_years,
 });
 
-export default async function ProgrammesPage() {
-  try {
-    const programmes = await getAllProgrammes();
-    const formattedProgrammes = programmes?.map(formatProgrammeData);
+export type ProgrammesType =
+  | {
+      Prog_ID: any;
+      Prog_Name: any;
+      Prog_Short_Name: any;
+      Regulatory_Body_Name: any;
+      Regulatory_Body_ShortName: any;
+      University_School: any;
+      Semester_Annual: any;
+      Min_Duration_in_years: any;
+      Max_Duration_in_years: any;
+    }[]
+  | undefined;
 
-    if (!formattedProgrammes || formattedProgrammes.length === 0) {
-      redirect("/admin/programmes/new");
+export default function ProgrammesPage() {
+  try {
+    const [formattedProgrammes, setFormattedProgrammes] =
+      useState<ProgrammesType>(undefined);
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+      const fetchProgrammes = async () => {
+        setIsLoading(true);
+        try {
+          const data = await getAllProgrammes();
+          const programmes = data?.map(formatProgrammeData);
+          setFormattedProgrammes(programmes);
+        } catch (error) {
+          console.error("Error fetching programmes:", error);
+        } finally {
+          setIsLoading(false);
+        }
+      };
+      fetchProgrammes();
+    }, []);
+
+    if (isLoading) {
+      return (
+        <div className="flex items-center justify-center min-h-screen">
+          Loading...
+        </div>
+      );
     }
 
     return (
@@ -91,7 +126,7 @@ export default async function ProgrammesPage() {
             <CardContent>
               <SearchBar programmes={formattedProgrammes} />
               <Badge variant="outline">
-                Total: {formattedProgrammes.length}
+                Total: {formattedProgrammes?.length}
               </Badge>
             </CardContent>
           </Card>
