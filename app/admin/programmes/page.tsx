@@ -1,4 +1,4 @@
-"use server";
+"use client";
 
 import { getAllProgrammes } from "@/action/programmes.action";
 import Loader from "@/app/loading";
@@ -13,7 +13,8 @@ import {
 } from "@/components/ui/card";
 import { GraduationCap, Home, Plus } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { redirect } from "next/navigation";
+import { useEffect, useState } from "react";
 import SearchBar from "./_components/SearchBar";
 
 // Convert Prisma data to match our UI format
@@ -43,32 +44,31 @@ export type ProgrammesType =
     }[]
   | undefined;
 
-export default async function ProgrammesPage() {
+export default function ProgrammesPage() {
   try {
-    const programmes = await getAllProgrammes();
-    const formattedProgrammes = programmes?.map(formatProgrammeData);
-    // const [formattedProgrammes, setFormattedProgrammes] =
-    //   useState<ProgrammesType>(undefined);
-    // const [isLoading, setIsLoading] = useState(false);
+    const [formattedProgrammes, setFormattedProgrammes] =
+      useState<ProgrammesType>(undefined);
+    const [isLoading, setIsLoading] = useState(true);
 
-    // useEffect(() => {
-    //   const fetchProgrammes = async () => {
-    //     setIsLoading(true);
-    //     try {
-    //       const data =
-    //       setFormattedProgrammes(programmes);
-    //     } catch (error) {
-    //       console.error("Error fetching programmes:", error);
-    //     } finally {
-    //       setIsLoading(false);
-    //     }
-    //   };
-    //   fetchProgrammes();
-    // }, []);
+    useEffect(() => {
+      const fetchProgrammes = async () => {
+        setIsLoading(true);
+        try {
+          const data = await getAllProgrammes();
+          const programmes = data?.map(formatProgrammeData);
+          setFormattedProgrammes(programmes);
+        } catch (error) {
+          console.error("Error fetching programmes:", error);
+        } finally {
+          setIsLoading(false);
+        }
+      };
+      fetchProgrammes();
+    }, []);
 
-    // if (isLoading) {
-    //   return <Loader message="Loading programmes" />;
-    // }
+    if (isLoading) {
+      return <Loader message="Loading programmes" />;
+    }
 
     return (
       <div className="min-h-screen bg-gray-50">
