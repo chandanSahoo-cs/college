@@ -98,7 +98,6 @@ export default function NewProgrammePage() {
       }
     } catch (error) {
       toast.error("Error fetching programme");
-      console.log("error fetching: ", error);
     }
   };
 

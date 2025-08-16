@@ -39,7 +39,6 @@ const formSchema = z.object({
 type FormValues = z.infer<typeof formSchema>;
 
 export default function EditIntakePage() {
-  console.log("Intake");
   const params = useParams();
   const course_id = params.id;
   const searchParams = useSearchParams();
@@ -66,7 +65,6 @@ export default function EditIntakePage() {
         Number(acad_year)
       );
 
-      console.log("intake: ", intake);
       if (intake) {
         form.reset({
           course_id: intake.course_id,

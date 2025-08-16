@@ -117,7 +117,6 @@ export default function NewCoursePage() {
       };
       await createCourse(formattedValues);
       // Here you would typically send the data to your backend
-      console.log("Course data:", formattedValues);
 
       // Show success message and redirect
       toast.success("Course added successfully!");

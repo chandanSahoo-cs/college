@@ -59,14 +59,12 @@ export async function deleteProgrammeById(prog_id: string) {
 
 export async function getProgrammeById(prog_id: string) {
   try {
-    console.log('Searching for programme with ID:', JSON.stringify(prog_id));
     
     const programme = await prisma.programmes.findUnique({
       where: {
         prog_id: prog_id
       },
     });
-   console.log(programme)
     return programme
 
   } catch (error) {

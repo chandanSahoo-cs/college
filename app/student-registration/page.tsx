@@ -65,7 +65,6 @@ export default function StudentRegistration() {
 
   const handleSubmit = async () => {
     // Here you would typically send the data to your backend
-    console.log("Form submitted with data:", formData)
 
     // Show success message and redirect
     alert("Student registration successful!")

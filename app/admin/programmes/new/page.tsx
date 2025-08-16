@@ -78,7 +78,6 @@ export default function NewProgrammePage() {
         Min_Duration_in_years: Number(values.Min_Duration_in_years),
         Max_Duration_in_years: Number(values.Max_Duration_in_years),
       };
-      console.log("Programme data:", formattedValues);
       await addProgramme(formattedValues);
 
       toast.success("Programme added successfully!");

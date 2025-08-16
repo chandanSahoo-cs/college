@@ -17,7 +17,6 @@ import SearchBar from "./_components/Searchbar";
 
 export default async function CoursesPage() {
   const { courses, total } = await getAllCourses();
-  console.log(courses);
 
   return (
     <div className="min-h-screen bg-gray-50">
