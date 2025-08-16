@@ -1,6 +1,7 @@
-"use server";
+"use client";
 
 import { getAllSubjects } from "@/action/subject.action";
+import Loader from "@/app/loading";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -13,7 +14,28 @@ import {
 import { BookOpen, Home, Plus } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { useEffect, useState } from "react";
 import SubjectSearchBar from "./components/SubjectSearchBar";
+
+export type SubjectType =
+  | {
+      paper_id: any;
+      scheme_id: any;
+      paper_code: any;
+      paper_name: any;
+      credits: any;
+      type: any;
+      exam: any;
+      mode: any;
+      paper_group: any;
+      paper_sub_group: any;
+      kind: any;
+      minor_max_marks: any;
+      major_max_marks: any;
+      total_max_marks: any;
+      pass_marks: any;
+    }[]
+  | undefined;
 
 const formatSubjectData = (subject: any) => ({
   paper_id: subject.paper_id,
@@ -33,13 +55,30 @@ const formatSubjectData = (subject: any) => ({
   pass_marks: subject.pass_marks,
 });
 
-export default async function SubjectsPage() {
+export default function SubjectsPage() {
   try {
-    const subjects = await getAllSubjects();
-    const formattedSubjects = subjects?.map(formatSubjectData);
+    const [formattedSubjects, setFormattedSubjects] = useState<SubjectType>([]);
 
-    if (!formattedSubjects || formattedSubjects.length === 0) {
-      redirect("/admin/subjects/new");
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+      const fetchCourses = async () => {
+        setIsLoading(true);
+        try {
+          const data = await getAllSubjects();
+          const subject = data?.map(formatSubjectData);
+          setFormattedSubjects(subject);
+        } catch (error) {
+          console.error("Error fetching programmes:", error);
+        } finally {
+          setIsLoading(false);
+        }
+      };
+      fetchCourses();
+    }, []);
+
+    if (isLoading) {
+      return <Loader message="Loading subjects..." />;
     }
 
     return (
@@ -55,14 +94,14 @@ export default async function SubjectsPage() {
               <Link href="/admin">
                 <Button
                   variant="outline"
-                  className="text-white border-white hover:bg-white hover:text-[#0c4da2]">
+                  className="bg-white/10 text-white border-white/20 hover:bg-white hover:text-[#0c4da2] hover:border-white transition-all duration-200 backdrop-blur-sm font-medium">
                   Admin Dashboard
                 </Button>
               </Link>
               <Link href="/">
                 <Button
                   variant="outline"
-                  className="text-white border-white hover:bg-white hover:text-[#0c4da2]">
+                  className="bg-white/10 text-white border-white/20 hover:bg-white hover:text-[#0c4da2] hover:border-white transition-all duration-200 backdrop-blur-sm font-medium">
                   <Home className="h-4 w-4 mr-2" /> Home
                 </Button>
               </Link>
@@ -89,8 +128,10 @@ export default async function SubjectsPage() {
               </div>
             </CardHeader>
             <CardContent>
-              <SubjectSearchBar subjects={formattedSubjects} />
-              <Badge variant="outline">Total: {formattedSubjects.length}</Badge>
+              <SubjectSearchBar subjects={formattedSubjects!} />
+              <Badge variant="outline">
+                Total: {formattedSubjects?.length}
+              </Badge>
             </CardContent>
           </Card>
         </main>

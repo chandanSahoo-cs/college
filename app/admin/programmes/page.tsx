@@ -13,7 +13,6 @@ import {
 } from "@/components/ui/card";
 import { GraduationCap, Home, Plus } from "lucide-react";
 import Link from "next/link";
-import { redirect } from "next/navigation";
 import { useEffect, useState } from "react";
 import SearchBar from "./_components/SearchBar";
 

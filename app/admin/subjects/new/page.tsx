@@ -1,5 +1,6 @@
 "use client";
 
+import { getAllSchemes } from "@/action/scheme.action";
 import { addSubject } from "@/action/subject.action";
 import { Button } from "@/components/ui/button";
 import {
@@ -18,10 +19,18 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowLeft, BookOpen, Home } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -48,6 +57,25 @@ type FormValues = z.infer<typeof formSchema>;
 
 export default function NewSubjectPage() {
   const router = useRouter();
+  const [schemes, setSchemes] = useState<{ scheme_id: string }[]>([]);
+
+  // Fetch programmes on component mount
+  useEffect(() => {
+    const fetchSchemes = async () => {
+      try {
+        const data = await getAllSchemes();
+        if (data) {
+          setSchemes(data);
+        }
+      } catch (error) {
+        console.error("Failed to fetch schemes:", error);
+        toast.error("Failed to load scheme options");
+      }
+    };
+
+    fetchSchemes();
+  }, []);
+
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -120,26 +148,61 @@ export default function NewSubjectPage() {
               <form
                 onSubmit={form.handleSubmit(onSubmit)}
                 className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {Object.keys(formSchema.shape).map((key) => (
-                  <FormField
-                    key={key}
-                    control={form.control}
-                    name={key as keyof FormValues}
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>
-                          {key
-                            .replace(/_/g, " ")
-                            .replace(/\b\w/g, (char) => char.toUpperCase())}
-                        </FormLabel>
-                        <FormControl>
-                          <Input {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                ))}
+                {Object.keys(formSchema.shape).map((key) => {
+                  if (key == "scheme_id") {
+                    return (
+                      <FormField
+                        key={key}
+                        control={form.control}
+                        name={key as keyof FormValues}
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Scheme ID*</FormLabel>
+                            <Select
+                              onValueChange={field.onChange}
+                              defaultValue={field.value?.toString()}>
+                              <FormControl>
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Select programme" />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                {schemes.map((scheme) => (
+                                  <SelectItem
+                                    key={scheme.scheme_id}
+                                    value={scheme.scheme_id}>
+                                    {`${scheme.scheme_id}`}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    );
+                  }
+                  return (
+                    <FormField
+                      key={key}
+                      control={form.control}
+                      name={key as keyof FormValues}
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>
+                            {key
+                              .replace(/_/g, " ")
+                              .replace(/\b\w/g, (char) => char.toUpperCase())}
+                          </FormLabel>
+                          <FormControl>
+                            <Input {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  );
+                })}
                 <div className="col-span-2 flex justify-end space-x-4">
                   <Link href="/admin/subjects">
                     <Button variant="outline">Cancel</Button>

@@ -24,9 +24,10 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
+import { SubjectType } from "../page";
 
 interface SearchBarProps {
-  subjects: any[];
+  subjects: SubjectType;
 }
 
 type FilterOption =
@@ -108,13 +109,13 @@ export default function SubjectSearchBar({ subjects }: SearchBarProps) {
     try {
       await deleteSubjectById(paper_id, scheme_id);
       toast.success("Subject deleted successfully");
-      router.refresh();
+      window.location.reload();
     } catch (error) {
       toast.error("Failed to delete subject");
     }
   };
 
-  const filteredSubjects = filteredSubjectsByAttribute(subjects, filter);
+  const filteredSubjects = filteredSubjectsByAttribute(subjects!, filter);
 
   return (
     <>
@@ -154,7 +155,7 @@ export default function SubjectSearchBar({ subjects }: SearchBarProps) {
 
           {/* Results count */}
           <div className="mt-3 text-sm text-gray-600">
-            Showing {filteredSubjects.length} of {subjects.length} subjects
+            Showing {filteredSubjects.length} of {subjects?.length} subjects
           </div>
         </div>
 
