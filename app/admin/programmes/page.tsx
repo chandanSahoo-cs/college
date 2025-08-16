@@ -1,6 +1,7 @@
-"use client";
+"use server";
 
 import { getAllProgrammes } from "@/action/programmes.action";
+import Loader from "@/app/loading";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,8 +13,7 @@ import {
 } from "@/components/ui/card";
 import { GraduationCap, Home, Plus } from "lucide-react";
 import Link from "next/link";
-import { redirect } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import SearchBar from "./_components/SearchBar";
 
 // Convert Prisma data to match our UI format
@@ -43,35 +43,32 @@ export type ProgrammesType =
     }[]
   | undefined;
 
-export default function ProgrammesPage() {
+export default async function ProgrammesPage() {
   try {
-    const [formattedProgrammes, setFormattedProgrammes] =
-      useState<ProgrammesType>(undefined);
-    const [isLoading, setIsLoading] = useState(true);
+    const programmes = await getAllProgrammes();
+    const formattedProgrammes = programmes?.map(formatProgrammeData);
+    // const [formattedProgrammes, setFormattedProgrammes] =
+    //   useState<ProgrammesType>(undefined);
+    // const [isLoading, setIsLoading] = useState(false);
 
-    useEffect(() => {
-      const fetchProgrammes = async () => {
-        setIsLoading(true);
-        try {
-          const data = await getAllProgrammes();
-          const programmes = data?.map(formatProgrammeData);
-          setFormattedProgrammes(programmes);
-        } catch (error) {
-          console.error("Error fetching programmes:", error);
-        } finally {
-          setIsLoading(false);
-        }
-      };
-      fetchProgrammes();
-    }, []);
+    // useEffect(() => {
+    //   const fetchProgrammes = async () => {
+    //     setIsLoading(true);
+    //     try {
+    //       const data =
+    //       setFormattedProgrammes(programmes);
+    //     } catch (error) {
+    //       console.error("Error fetching programmes:", error);
+    //     } finally {
+    //       setIsLoading(false);
+    //     }
+    //   };
+    //   fetchProgrammes();
+    // }, []);
 
-    if (isLoading) {
-      return (
-        <div className="flex items-center justify-center min-h-screen">
-          Loading...
-        </div>
-      );
-    }
+    // if (isLoading) {
+    //   return <Loader message="Loading programmes" />;
+    // }
 
     return (
       <div className="min-h-screen bg-gray-50">
@@ -135,6 +132,5 @@ export default function ProgrammesPage() {
     );
   } catch (error) {
     console.error("Error fetching programmes:", error);
-    redirect("/admin/programmes/new");
   }
 }

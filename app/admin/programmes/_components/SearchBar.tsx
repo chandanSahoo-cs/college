@@ -121,10 +121,11 @@ export default function SearchBar({ programmes }: SearchBarProps) {
     try {
       await deleteProgrammeById(id);
       toast.success("Programme deleted successfully");
+      // window.location.reload();
     } catch (error) {
       toast.error("Failed to delete programme");
     }
-
+    console.log("Hello");
     router.refresh();
   };
 
