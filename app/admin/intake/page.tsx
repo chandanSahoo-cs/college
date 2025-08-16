@@ -1,10 +1,10 @@
-"use server";
+"use client";
 
 import { GraduationCap, Home, Plus } from "lucide-react";
 import Link from "next/link";
-import { redirect } from "next/navigation";
 
 import { getAllCourseIntakes } from "@/action/courseIntake.action";
+import Loader from "@/app/loading";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -14,7 +14,15 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { useEffect, useState } from "react";
 import IntakeSearchBar from "../intake/components/IntakeSearchBar";
+
+export type IntakesType = {
+  Course_ID: string;
+  Course_Name: string; // optional chaining if included
+  Acad_Year: number;
+  Intake: number;
+};
 
 // Format intake data for search component
 const formatIntakeData = (intake: any) => ({
@@ -24,13 +32,30 @@ const formatIntakeData = (intake: any) => ({
   Intake: intake.intake,
 });
 
-export default async function CourseIntakesPage() {
+export default function CourseIntakesPage() {
   try {
-    const intakes = await getAllCourseIntakes();
-    const formattedIntakes = intakes?.map(formatIntakeData);
+    const [formattedIntakes, setFormattedIntakes] = useState<IntakesType[]>();
 
-    if (!formattedIntakes || formattedIntakes.length === 0) {
-      redirect("/admin/intake/new");
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+      const fetchCourseIntakes = async () => {
+        setIsLoading(true);
+        try {
+          const data = await getAllCourseIntakes();
+          const intake = data?.map(formatIntakeData);
+          setFormattedIntakes(intake);
+        } catch (error) {
+          console.error("Error fetching programmes:", error);
+        } finally {
+          setIsLoading(false);
+        }
+      };
+      fetchCourseIntakes();
+    }, []);
+
+    if (isLoading) {
+      return <Loader message="Loading course intake..." />;
     }
 
     return (
@@ -80,8 +105,8 @@ export default async function CourseIntakesPage() {
               </div>
             </CardHeader>
             <CardContent>
-              <IntakeSearchBar intakes={formattedIntakes} />
-              <Badge variant="outline">Total: {formattedIntakes.length}</Badge>
+              <IntakeSearchBar intakes={formattedIntakes!} />
+              <Badge variant="outline">Total: {formattedIntakes?.length}</Badge>
             </CardContent>
           </Card>
         </main>
@@ -89,6 +114,5 @@ export default async function CourseIntakesPage() {
     );
   } catch (error) {
     console.error("Error fetching intakes:", error);
-    redirect("/admin/intake/new");
   }
 }

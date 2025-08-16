@@ -70,7 +70,6 @@ type FormValues = z.infer<typeof formSchema>;
 
 export default function NewCoursePage() {
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState(false);
   const [programmes, setProgrammes] = useState<
     { prog_id: string; prog_name: string }[]
   >([]);

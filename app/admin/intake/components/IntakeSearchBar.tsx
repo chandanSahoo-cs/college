@@ -24,12 +24,13 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
+import { IntakesType } from "../page";
 
 interface IntakeSearchBarProps {
-  intakes: any[];
+  intakes: IntakesType[];
 }
 
-type FilterOption = "all" | "Course Name" | "Acad Year" | "Intake";
+type FilterOption = "all" | "Course Name" | "Acad Year" | "Intake" | "Id";
 
 export default function IntakeSearchBar({ intakes }: IntakeSearchBarProps) {
   const [searchTerm, setSearchTerm] = useState("");
@@ -49,8 +50,11 @@ export default function IntakeSearchBar({ intakes }: IntakeSearchBarProps) {
         return intake.Acad_Year.toString().includes(term);
       case "Intake":
         return intake.Intake.toString().includes(term);
+      case "Id":
+        return intake.Course_ID.toString().toLowerCase().includes(term);
       case "all":
         return (
+          intake.Course_ID.toString().includes(term) ||
           intake.Course_Name?.toLowerCase().includes(term) ||
           intake.Acad_Year.toString().includes(term) ||
           intake.Intake.toString().includes(term)
@@ -66,7 +70,7 @@ export default function IntakeSearchBar({ intakes }: IntakeSearchBarProps) {
     try {
       await deleteCourseIntakeById(courseId, acadYear);
       toast.success("Intake deleted successfully");
-      router.refresh();
+      window.location.reload();
     } catch (error) {
       toast.error("Failed to delete intake");
     }
@@ -101,6 +105,7 @@ export default function IntakeSearchBar({ intakes }: IntakeSearchBarProps) {
                 <SelectItem value="Course Name">Course Name</SelectItem>
                 <SelectItem value="Acad Year">Academic Year</SelectItem>
                 <SelectItem value="Intake">Intake Number</SelectItem>
+                <SelectItem value="Id">Course Id</SelectItem>
               </SelectContent>
             </Select>
           </div>

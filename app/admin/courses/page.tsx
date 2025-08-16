@@ -17,13 +17,13 @@ import SearchBar from "./_components/Searchbar";
 
 // Mock data - replace with actual data fetching
 
-export default async function CoursesPage() {
+export default function CoursesPage() {
   const [courses, setCourses] = useState<Course[]>();
 
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const fetchProgrammes = async () => {
+    const fetchCourses = async () => {
       setIsLoading(true);
       try {
         const { courses, total } = await getAllCourses();
@@ -34,7 +34,7 @@ export default async function CoursesPage() {
         setIsLoading(false);
       }
     };
-    fetchProgrammes();
+    fetchCourses();
   }, []);
 
   if (isLoading) {
